@@ -31,22 +31,41 @@ do
 done
 log_task "Artifactory is responding"
 
-while [ true ]
-do
-    jf config add  academy --url=http://academy-artifactory --user=admin --password=Admin1234! --interactive=false
-    if [ $? -eq 0 ]
-    then
+jf c rm academy1 --quiet
+
+while true; do
+    # Try with access token first
+    jf config add academy1 \
+        --url=http://academy-artifactory \
+        --access-token "$JFROG_ACCESS_TOKEN" \
+        --interactive=false
+
+    if [ $? -eq 0 ]; then
         break
     fi
+
+    # If access token fails, try with user/password
+    jf config add academy1 \
+        --url=http://academy-artifactory \
+        --user=admin \
+        --password=Admin1234! \
+        --interactive=false
+
+    if [ $? -eq 0 ]; then
+        break
+    fi
+
+    # Retry after a delay
     sleep 20
 done
+
 log_task "JF Config executed"
 
 jf rt curl \
     -X PATCH \
     -H "Content-Type: application/yaml" \
-    -T JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/lab110-repo-npm-def-all.yaml \
-     "api/system/configuration" --server-id=academy
+    -T labs1_setup/lab110-repo-npm-def-all.yaml \
+     "api/system/configuration" --server-id=academy1
 
 log_task "Repositories created"
 
