@@ -1,1 +1,1 @@
-{"key":"workshop-npm-dev-local","packageType":"npm","rclass":"local"}
+{"environments":"DEV","key":"workshop-npm-dev-local","packageType":"npm","rclass":"local","xrayIndex":"false"}
