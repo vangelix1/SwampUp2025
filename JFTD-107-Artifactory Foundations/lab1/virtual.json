@@ -1,1 +1,1 @@
-{"key":"workshop-npm-virtual","packageType":"npm","rclass":"virtual"}
+{"key":"workshop-npm-virtual","packageType":"npm","rclass":"virtual","repositories":"workshop-npm-dev-local,workshop-npm-dev-remote"}
