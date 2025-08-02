@@ -1,0 +1,13 @@
+{
+    "name": "jftd-110-helloworld-npm-example",
+    "version": "0.0.1",
+    "scripts": {
+      "start": "node helloworld"
+    },
+    "dependencies": {
+      "send": "^0.16.2"
+    },
+    "devDependencies": {
+      "debug": "^4.1.1"
+    }
+  }
