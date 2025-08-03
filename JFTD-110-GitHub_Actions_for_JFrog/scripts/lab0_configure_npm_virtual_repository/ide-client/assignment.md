@@ -32,8 +32,6 @@ This step configures the Npm environment to access the JFrog platform for Npm mo
 2. Run these commands
 
 ```
-chmod +x /root/jfrog/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/env-config.sh
-
  /root/jfrog/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/env-config.sh
 ```
 3. Paste the token and press enter
@@ -51,15 +49,15 @@ chmod +x /root/jfrog/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/env-config.sh
 Run:
 ```
 source /root/.bashrc
-chmod +x /root/jfrog/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/setup-init.sh
+
 /root/jfrog/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/setup-init.sh
 ```
 
-![Screenshot 2025-06-05 at 9.51.33 AM.png](https://play.instruqt.com/assets/tracks/ljtcwga6ionx/48da9f8040375968b40087bc52921dcd/assets/Screenshot%202025-06-05%20at%209.51.33%E2%80%AFAM.png)
+![lab110-npm-virtual.png](https://github.com/jfrog/SwampUp2025/blob/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/lab110-npm-virtual.png)
 
 
 #### **Expected Results:**
-The repository named lab110-npm-virtual should exist . Click on "Check" below to verify your lab environment .
+The repository named `lab110-npm-virtual` should exist . Click on "Check" below to verify your lab environment .
 
 Set the "JF_URL"  in your Github action workflow to the the value printed by the following:
 ```
