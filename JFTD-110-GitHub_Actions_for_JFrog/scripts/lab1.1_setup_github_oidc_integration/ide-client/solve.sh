@@ -83,7 +83,7 @@ echo "   Server ID: $SERVER_ID"
 echo ""
 
 # Solve Lab 1.1 by creating the OIDC provider
-if jf_solve_lab_1_1 "$SERVER_ID" "svk-githuboidc1" true; then
+if jf_solve_lab_1_1 "$SERVER_ID" "svk-githuboidc" true; then
     echo ""
     echo "🎉 Lab 1.1 completed successfully!"
     echo "✅ OIDC provider 'svk-githuboidc' is ready for GitHub Actions integration"

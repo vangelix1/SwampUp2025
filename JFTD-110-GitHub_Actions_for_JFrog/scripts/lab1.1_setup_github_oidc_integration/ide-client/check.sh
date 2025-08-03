@@ -4,6 +4,6 @@ source "$(dirname "$0")/../../jf_api_wrapper_utils.sh"
 echo "🎯 Lab 1.1 - OIDC Provider Setup for GitHub Actions"
 echo "================================================"
 
-jf_check_all_oidc_providers psazuse sureshv-github-actions-jfcli
+jf_check_all_oidc_providers psazuse svk-githuboidc
 
 
