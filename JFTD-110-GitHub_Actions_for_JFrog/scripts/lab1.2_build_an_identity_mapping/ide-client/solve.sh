@@ -8,7 +8,7 @@ echo "================================================"
 
 # Configuration
 SERVER_ID="psazuse"
-PROVIDER_NAME="svk-githuboidc1"
+PROVIDER_NAME="svk-githuboidc"
 MAPPING_NAME="jfrog-repos"
 GIT_ORG="jfrog"
 GIT_REPO="SwampUp2025"
