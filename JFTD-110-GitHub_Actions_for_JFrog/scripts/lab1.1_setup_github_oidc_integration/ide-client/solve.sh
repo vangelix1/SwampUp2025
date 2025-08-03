@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source the jf_api_wrapper_utils.sh script to get access to the RT & Access OIDC functions
-source "$(dirname "$0")/../jf_api_wrapper_utils.sh"
+source "$(dirname "$0")/../../jf_api_wrapper_utils.sh"
 
 jf_solve_lab_1_1() {
     # Solve Lab 1.1 by creating the required OIDC provider

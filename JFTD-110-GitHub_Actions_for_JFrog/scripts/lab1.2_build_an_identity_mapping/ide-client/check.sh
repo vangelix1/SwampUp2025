@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source the check.sh script from lab1.1 to get access to the OIDC functions
-source "$(dirname "$0")/../../lab1.1_setup_github_oidc_integration/ide-client/check.sh"
+source "$(dirname "$0")/../../jf_api_wrapper_utils.sh"
 
 echo "🔍 Lab 1.2 - Checking OIDC Identity Mapping"
 echo "================================================"

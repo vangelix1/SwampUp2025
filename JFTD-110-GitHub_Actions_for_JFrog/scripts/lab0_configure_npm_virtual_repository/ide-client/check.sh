@@ -1,6 +1,6 @@
 #!/bin/bash
 # Source the jf_api_wrapper_utils.sh script to get access to the RT & Access OIDC functions
-source "$(dirname "$0")/../jf_api_wrapper_utils.sh"
+source "$(dirname "$0")/../../jf_api_wrapper_utils.sh"
 
 echo "🎯 Lab 0 - Configure NPM Virtual Repository for GitHub Actions"
 echo "============================================================="
