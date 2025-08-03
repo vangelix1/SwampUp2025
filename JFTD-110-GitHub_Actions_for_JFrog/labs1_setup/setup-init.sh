@@ -15,7 +15,7 @@ log_task () {
 
 log_task "Started Lab setup"
 
-cd jfrog
+cd jfrog/JFTD-110-GitHub_Actions_for_JFrog
 
 snap install jq
 log_task "Installed jq"
