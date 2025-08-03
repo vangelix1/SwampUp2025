@@ -1,6 +1,10 @@
+# https://jfrog.com/help/r/jfrog-platform-administration-documentation/sample-integration-of-jfrog-oidc-with-github-actions
 name: "JFTD-110-GitHub_Actions_for_JFrog: NPM Package with OIDC"
 description: "This workflow demonstrates how to use JFrog CLI with OIDC authentication to build and publish an NPM package, manage builds"
-on: push
+on:
+  push:
+    paths:
+      - 'JFTD-110-GitHub_Actions_for_JFrog/**'
 permissions:
   actions: read # for detecting the Github Actions environment.
   id-token: write # for creating OIDC tokens for signing.
@@ -8,12 +12,12 @@ permissions:
   contents: read
   security-events: write # Required for uploading code scanning.
 env:
-  JF_RT_URL: "https://${{vars.JF_NAME}}.jfrog.io"
+  # JF_URL: "${{vars.JF_RT_URL}}" 
   # BUILD_ID: "ga-${{github.run_number}}"
   NODE_VERSION: "20" # Node version to use
   JOB_SUMMARY: false
   JFROG_CLI_LOG_LEVEL: DEBUG # DEBUG, INFO, WARN, ERROR
-  WORKSPACE_TYPESCRIPT_REACT: "JFTD-110-GitHub_Actions_for_JFrog/helloworld_npm"
+  WORKSPACE_NPM: "JFTD-110-GitHub_Actions_for_JFrog/helloworld_npm"
   RT_REPO_NPM_VIRTUAL: "lab110-npm-virtual"
   RT_REPO_NPM_DEFAULT_LOCAL: "lab110-npm-sandbox-local"
   # EVIDENCE_JSON: "my-evidence.json"
@@ -28,20 +32,25 @@ jobs:
       BUILD_ID: "ga-npm-${{github.run_number}}"
     defaults:
        run:
-         working-directory: ${{env.WORKSPACE_TYPESCRIPT_REACT}}
+         working-directory: ${{env.WORKSPACE_NPM}}
     steps:
-      - name: "Clone VCS"
+      - name: "Checkout Repository"
         continue-on-error: true
         uses: actions/checkout@v4
 
-      - name: "Setup JFrog CLI"
+      - name: "Get Artifactory Access Token and Setup JFrog CLI"
         uses: jfrog/setup-jfrog-cli@v4
         id: setup-cli
         env:
-          JF_URL: ${{ env.JF_RT_URL }}
+          JF_URL: ${{vars.JF_RT_URL}}   # example: http://academy-artifactory.dzmfffgzzkmf.instruqt.io
         with:
           version: latest
           oidc-provider-name: ${{ vars.JF_OIDC_PROVIDER_NAME }}
+
+      - name: "Run only if value is present"
+        if: steps.setup-jfrog-cli.outputs.oidc-token != ''
+        run: |
+          echo "Access Token set as output to 'Get Artifactory Access Token and Setup JFrog CLI'"
 
       # - name: "Setup Node.js v${{env.NODE_VERSION}}"
       #   uses: actions/setup-node@v4
@@ -205,7 +214,7 @@ jobs:
   #     BUILD_ID: "ga-npm-${{github.run_number}}"
   #   defaults:
   #       run:
-  #         working-directory: "${{env.WORKSPACE_TYPESCRIPT_REACT}}"
+  #         working-directory: "${{env.WORKSPACE_NPM}}"
   #   steps:
   #     - name: "Setup JFrog CLI"
   #       uses: jfrog/setup-jfrog-cli@v4
@@ -238,7 +247,7 @@ jobs:
   #     BUILD_ID: "ga-npm-${{github.run_number}}"
   #   defaults:
   #       run:
-  #         working-directory: "${{env.WORKSPACE_TYPESCRIPT_REACT}}"
+  #         working-directory: "${{env.WORKSPACE_NPM}}"
   #   steps:
   #     - name: "Setup JFrog CLI"
   #       uses: jfrog/setup-jfrog-cli@v4
@@ -396,7 +405,7 @@ jobs:
   #     BUILD_ID: "ga-npm-${{github.run_number}}"
   #   defaults:
   #       run:
-  #         working-directory: "${{env.WORKSPACE_TYPESCRIPT_REACT}}"
+  #         working-directory: "${{env.WORKSPACE_NPM}}"
   #   steps:
   #     - name: "Setup JFrog CLI"
   #       uses: jfrog/setup-jfrog-cli@v4
