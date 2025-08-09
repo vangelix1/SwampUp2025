@@ -32,7 +32,7 @@ This step configures the Npm environment to access the JFrog platform for Npm mo
 2. Run these commands
 
 ```
- /root/jfrog/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/env-config.sh
+ /root/swampup25/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/env-config.sh
 ```
 3. Paste the token and press enter
 
@@ -50,7 +50,7 @@ Run:
 ```
 source /root/.bashrc
 
-/root/jfrog/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/setup-init.sh
+/root/swampup25/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/setup-init.sh
 ```
 
 ![lab110-npm-virtual.png](https://github.com/jfrog/SwampUp2025/blob/JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/lab110-npm-virtual.png)
