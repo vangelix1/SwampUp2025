@@ -9,7 +9,7 @@
 - **Description**: Feel free to add a description, but this is not required.
 - **Claims JSON**:  This is where you will configure the *required* claims that *must* be present on the Identity Token that your Github Actions Workflow will send to your Jfrog Platform instance.  For details on what this identity token contains, refer to this [Github documentation page](https://docs.github.com/en/actions/concepts/security/about-security-hardening-with-openid-connect#understanding-the-oidc-token).  For now, we will keep things simple and add a JSON-formatted bit of text that will be similar to:
 ```
-{ "repository": "jfrog/SwampUp2025"}
+{ "repository": "<your Github username>/SwampUp2025"}
 ```
 Replace `"jfrog/SwampUp2025"` with your actual repository name.
 To do:  In "Access Token Settings" section , specify the "User name"  as "admin" ,  Service "artifactory" , Token Expiration time (In Minutes) =  use default 10 minutes. Click Save twice.
