@@ -1,0 +1,1 @@
+[{"name":"test-mapping-4","description":"spring-petclinic-app","claims":{"repository":"sureshvenkatesan/spring-petclinic"},"token_spec":{"username":"svenkate","scope":"applied-permissions/admin","audience":"*@*","expires_in":1260},"priority":1}]

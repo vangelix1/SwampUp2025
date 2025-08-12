@@ -21,17 +21,6 @@ cd jfrog/lab-2
 docker build -t academy-docker-image . 
 ##
 
-# Wait for Artifactory
-while [ true ]
-do
-    wget http://academy-artifactory  > /dev/null 2>&1
-    if [ $? -eq 0 ]
-    then   
-        break
-    fi
-done
-log_task "Artifactory is responding"
-
 while [ true ]
 do
     jf config add  academy --url=http://academy-artifactory --user=admin --password=Admin1234! --interactive=false
