@@ -15,7 +15,7 @@ log_task () {
 
 log_task "Started Lab setup"
 
-cd swampup25/JFTD-110-GitHub_Actions_for_JFrog
+# cd swampup25/JFTD-110-GitHub_Actions_for_JFrog
 
 snap install jq
 log_task "Installed jq"
@@ -64,8 +64,8 @@ log_task "JF Config executed"
 jf rt curl \
     -X PATCH \
     -H "Content-Type: application/yaml" \
-    -T labs1_setup/lab110-repo-npm-def-all.yaml \
-     "api/system/configuration" --server-id=academy1
+    -T /root/swampup25/JFTD-110-GitHub_Actions_for_JFrog/scripts/setup/lab110-repo-npm-def-all.yaml \
+     "api/system/configuration" --server-id=academy
 
 log_task "Repositories created"
 
