@@ -69,6 +69,27 @@ jf rt curl \
 
 log_task "Repositories created"
 
+jf xr curl -XPOST "ui/unified/binMgr/v1/setIndexedBuilds" \
+-H "content-type:application/json" --server-id=academy \
+-d '{
+  "new_state": {
+    "config_type": 1,
+    "exclude_patterns": [],
+    "include_patterns": [
+      {
+        "pattern": "*/**"
+      }
+    ]
+  },
+  "previous_state": {
+    "is_vuln_contextual_supported": true,
+    "has_vuln_contextual_analysis_config_lock": false,
+    "show_promote_tip_for_vuln_contextual_analysis": false,
+    "config_type": 0
+  }
+}'
+log_task "Indexed All builds by Pattern"
+
 # chmod +x JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/update_repo_environments.sh
 
 # curl -X POST \
