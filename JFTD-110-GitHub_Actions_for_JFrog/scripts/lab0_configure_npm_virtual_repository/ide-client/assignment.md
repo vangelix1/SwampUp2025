@@ -4,11 +4,43 @@ We will need each student to have their own fork of the source code repository. 
 1. In a separate browser tab, log in to your Github account and *Fork* the source code repository found at https://github.com/jfrog/SwampUp2025.
 2. Confirm that the fork was successful and the URL is something like `https://github.com/<your Github User Name>/SwampUp25`
 
+---
+
+####  **Step 0: Generate an access token**
+1. Log into your JFrog Platform interface (JFrog Platform UI tab).
+
+[button label="JFrog Platform UI"](tab-0)
+
+```
+- User: admin
+- Password: Admin1234!
+```
+
+2. Close the initial window "Welcome to the JFrog Platform!".
+3.  Navigate to  "Administration".
+4.  From the navigation bar go to "User Management" and select "Access Tokens"
+5.  Click on "Generate Token"
+6.  Description:  your choice
+7.  User name: **admin**
+8.  Click "Generate"
+9.  Click "Copy" (save it locally if you need, but do not loose it)
+
+### **Step 1: Configure dev environment**
+This step configures the Npm environment to access the JFrog platform for your NPM builds.  The script will prompt you for the JFrog Access Token that you generated in the previous step.
+1. Open the terminal tab [button label="IDE Terminal"](tab-2)
+2. Run this command:
+
+```
+/root/swampup25/JFTD-110-GitHub_Actions_for_JFrog/scripts/setup/env-config.sh
+```
+3. Paste the token from the previous step and press enter.
+
+---
 ### Lab Exercise: Create and configure Npm Virtual repository
 This lab exercise will execute some automation to create NPM Local, Remote and Virtual repositories
 
----
 ### **Step-by-Step Instructions:**
+
 
 ### **Step 1: Create a Npm virtual repository**
 The `setup-init.sh` script will create a Local, Remote and Virtual repositories.  This allows you to build and publish a real NPM package.  The repository setup looks like:
@@ -64,38 +96,5 @@ Example output: `http://academy-artifactory.wx65h83lbxnp.instruqt.io`
 
 You should see the GitHub Actions **repository variable** named `JF_RT_URL` as shown below:
 ![lab-0-screenshot.png](https://play.instruqt.com/assets/tracks/f23ptscol8ax/4cb13fef5fe2af86aef61860f45bf0f2/assets/lab-0-screenshot.png)
-
----
-### Optional -  Debug Step to configure Jfrog CLI:
-
-####  **Step 0: Generate an access token**
-1. Log into your JFrog Platform interface (JFrog Platform UI tab).
-
-[button label="JFrog Platform UI"](tab-0)
-
-```
-- User: admin
-- Password: Admin1234!
-```
-
-2. Close the initial window "Welcome to the JFrog Platform!".
-3.  Navigate to  "Administration".
-4.  From the navigation bar go to "User Management" and select "Access Tokens"
-5.  Click on "Generate Token"
-6.  Description:  your choice
-7.  User name: **admin**
-8.  Click "Generate"
-9.  Click "Copy" (save it locally if you need, but do not loose it)
-
-### **Step 1: Configure dev environment**
-This step configures the Npm environment to access the JFrog platform for your NPM builds.  The script will prompt you for the JFrog Access Token that you generated in the previous step.
-1. Open the terminal tab [button label="IDE Terminal"](tab-2)
-2. Run this command:
-
-```
-/root/swampup25/JFTD-110-GitHub_Actions_for_JFrog/scripts/setup/env-config.sh
-```
-3. Paste the token from the previous step and press enter.
-4. Next do the steps under `Step-by-Step Instructions:` above.
 
 ---
