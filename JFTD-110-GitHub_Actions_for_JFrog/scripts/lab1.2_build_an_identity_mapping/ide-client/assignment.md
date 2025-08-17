@@ -1,4 +1,5 @@
 # Lab Instructions
+Next we will configure an Identiy Mapping.  An identity mapping is the object that connects the Github Actions workflow run identity with a JFrog user, group or Admin.  You can have many identity mappings defined in one Integration object.
 ## JFrog Instance
 1. Go into your OIDC Integration Page you created in the previous lab.
 2. Under the "Identity Mappings" Section, ensure the "Global" tab is highlighted.
