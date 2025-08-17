@@ -18,8 +18,9 @@ rm -fr /root/jfrog/
 # git clone https://github.com/sureshvenkatesan/node-todomvc.git jfrog
 # git clone https://github.com/sureshvenkatesan/JFTD-110-GitHub_Actions_for_JFrog.git jfrog
 # git clone --branch main https://github.com/sureshvenkatesan/SwampUp2025.git jfrog
-# git clone --branch main https://github.com/jfrog/SwampUp2025.git jfrog
-git clone --branch JFTD-110 https://github.com/jfrog/SwampUp2025.git jfrog
+# git clone --branch JFTD-110 https://github.com/jfrog/SwampUp2025.git jfrog
+git clone --branch main https://github.com/jfrog/SwampUp2025.git jfrog
+
 
 #cp -r  /root/swampup25 /root/jfrog
 #Recursively run "chomd +x" on all  *.sh files under /root/jfrog/JFTD-110-GitHub_Actions_for_JFrog :
@@ -31,5 +32,7 @@ find /root/swampup25/JFTD-110-GitHub_Actions_for_JFrog -type f -name "*.sh" -exe
 # code-server --install-extension ms-vscode.node-debug2
 # code-server --install-extension ms-vscode.vscode-typescript-next
 
+
+# nohup /root/jfrog/110-github/labs1/setup-init.sh > /tmp/setup-init.log 2>&1 &
 
 # exit  
