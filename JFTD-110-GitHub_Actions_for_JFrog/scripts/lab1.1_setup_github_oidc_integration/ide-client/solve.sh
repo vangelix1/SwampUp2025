@@ -10,7 +10,7 @@ jf_solve_lab_1_1() {
     # Returns: 0 if successful, 1 if provider already exists, 2 on error
     
     local server_id="$1"
-    local provider_name="${2:-svk-githuboidc}"
+    local provider_name="${2:-jfrog-githuboidc}"
     local debug="${3:-false}"
     
     if [ -z "$server_id" ]; then
@@ -75,7 +75,7 @@ echo "================================================"
 
 
 # Set the server ID and JF_URL
-SERVER_ID="academy"
+SERVER_ID="academy1"
 # JF_URL="http://$_SANDBOX_ID.instruqt.io"
 
 echo "🔧 Configuration:"

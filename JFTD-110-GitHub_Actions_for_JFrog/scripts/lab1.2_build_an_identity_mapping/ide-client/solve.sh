@@ -7,7 +7,7 @@ echo "🎯 Lab 1.2 - Creating OIDC Identity Mapping"
 echo "================================================"
 
 # Configuration
-SERVER_ID="academy"
+SERVER_ID="academy1"
 PROVIDER_NAME="jfrog-githuboidc"
 MAPPING_NAME="jfrog-repos"
 GIT_ORG="jfrog"
