@@ -126,7 +126,7 @@ jobs:
 
       - name: "Sleep for few seconds"
         env: 
-          SLEEP_TIME: 10
+          SLEEP_TIME: 30
         run: |
            echo "Sleeping for ${{env.SLEEP_TIME}} seconds..."
            sleep ${{env.SLEEP_TIME}}  # Sleeping for 20 seconds before executing the build publish seems to have resolved the build-scan issue. This delay might be helping with synchronization or resource availability, ensuring a smooth build process.
