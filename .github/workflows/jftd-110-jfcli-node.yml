@@ -45,15 +45,14 @@ jobs:
       # 5. Copy the "Show Snippet" YAML configuration
       # 6. Replace this commented section with the copied snippet
       #
-      # Example snippet structure (replace with your actual configuration):
-      # - name: "Get Artifactory Access Token and Setup JFrog CLI"
-      #   uses: jfrog/setup-jfrog-cli@v4
-      #   id: setup-cli
-      #   env:
-      #     JF_URL: ${{vars.JF_RT_URL}}
-      #   with:
-      #     version: latest
-      #     oidc-provider-name: ${{ vars.JF_OIDC_PROVIDER_NAME }}
+      - name: "Get Artifactory Access Token and Setup JFrog CLI"
+        uses: jfrog/setup-jfrog-cli@v4
+        id: setup-cli
+        env:
+          JF_URL: ${{vars.JF_RT_URL}}   # example: http://academy-artifactory.dzmfffgzzkmf.instruqt.io
+        with:
+          version: latest
+          oidc-provider-name: jfrog-githuboidc
 
       - name: "Get Artifactory Access Token and Setup JFrog CLI"
         uses: jfrog/setup-jfrog-cli@v4
