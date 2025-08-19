@@ -45,34 +45,21 @@ jobs:
       # 5. Copy the "Show Snippet" YAML configuration
       # 6. Replace this commented section with the copied snippet
       #
-      - name: "Get Artifactory Access Token and Setup JFrog CLI"
-        uses: jfrog/setup-jfrog-cli@v4
-        id: setup-cli
-        env:
-          JF_URL: ${{vars.JF_RT_URL}}   # example: http://academy-artifactory.dzmfffgzzkmf.instruqt.io
-        with:
-          version: latest
-          oidc-provider-name: jfrog-githuboidc
+      # - name: "Get Artifactory Access Token and Setup JFrog CLI"
+      #   uses: jfrog/setup-jfrog-cli@v4
+      #   id: setup-cli
+      #   env:
+      #     JF_URL: ${{vars.ARTIFACTORY_URL}}   # example: http://academy-artifactory.dzmfffgzzkmf.instruqt.io
+      #   with:
+      #     version: latest
+      #     oidc-provider-name: jfrog-githuboidc
 
-      - name: "Get Artifactory Access Token and Setup JFrog CLI"
-        uses: jfrog/setup-jfrog-cli@v4
-        id: setup-cli
-        env:
-          JF_URL: ${{vars.JF_RT_URL}}
-        with:
-          version: latest
-          oidc-provider-name: ${{ vars.JF_OIDC_PROVIDER_NAME }}
 
       - name: "Run only if value is present"
         if: steps.setup-jfrog-cli.outputs.oidc-token != ''
         run: |
           echo "Access Token set as output to 'Get Artifactory Access Token and Setup JFrog CLI'"
 
-      # - name: "Optional: Setup Node.js v${{env.NODE_VERSION}}"
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: ${{env.NODE_VERSION}}
-      #     registry-url: "${{env.JF_RT_URL}}/artifactory/api/npm/${{ env.RT_REPO_NPM_VIRTUAL }}"  # https://psazuse.jfrog.io/artifactory/api/npm/todomvc-npm-virtual/
 
       - name: "Config npm registry with JFrog CLI"
         run: |
