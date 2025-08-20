@@ -1,7 +1,7 @@
 # Python app
 
 ## Prestep
-- Create remote repo 'curation-blocked-py-remote'
+- Create remote repo 'py-remote'
 
 
 ## Curation Policy

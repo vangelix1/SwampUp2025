@@ -12,12 +12,14 @@ The script automates the configuration of a JFrog Artifactory instance by settin
 - Verify setup configuration and Artifactory availability.
 - Artifactory: Creates 3 remote repositories (Maven, PyPI, NPM) with names containing a timestamp.
 
+
+## Artifactory 
 ### Create repositories using CLI
-- Run the command in the `LAB-1` folder
+- Run the command in the *LAB-1* folder
 ````
     ./setup-repos.sh
 ````
-<img src="./images/repo-created.png" />
+<img src="./images/artifactory-repo-created.png" />
 <br/>
 - Verify  the created repos in the `LAB-1` folder
 ## Verify
@@ -25,7 +27,24 @@ The script automates the configuration of a JFrog Artifactory instance by settin
     ./repos-create.sh verify
 ````
 
+
 ## Curation
+
+### Platform >> Catalog >> Labels
+- Create label by clicking button `Create New Label`
+<img src="./images/catalog-labels-newbutton.png" />
+<br/>
+- Enter *Label Name* and *Description*
+    - ` ALLOW-THIS `
+    - ` ALLOW PACKAGES`
+<img src="./images/catalog-labels-create.png" />
+<br/>
+- Click button `Save Label`
+
+
+
+
+### Administration >> Curation Settings
 ### Enable
 - login to JFrog Platform UI using the credentials
 - Go to 'Administration' tab
