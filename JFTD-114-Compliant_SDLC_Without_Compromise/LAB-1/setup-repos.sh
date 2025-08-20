@@ -34,10 +34,10 @@ create-local-repos(){
 create-virtual-repos(){
     # Create new repo and refer https://jfrog.com/help/r/jfrog-rest-apis/create-repository
     printf "\n\n 3. Creating VIRTUAL repositories \n"
-    reposData="{ \"key\": \"lab3-mvn-virtual\", \"packageType\": \"maven\", \"rclass\": \"virtual\", \"defaultDeploymentRepo\": \"lab3-mvn-snapshot-local\", \"repositories\": [ \"lab3-mvn-snapshot-local\", \"lab3-mvn-dev-local\", \"lab3-mvn-prod-local\", \"mvn-remote\"] }"
+    reposData="{ \"key\": \"lab3-mvn-virtual\", \"packageType\": \"maven\", \"rclass\": \"virtual\", \"description\": \"The virtual repository public description\", \"defaultDeploymentRepo\": \"lab3-mvn-snapshot-local\", \"repositories\": [ \"lab3-mvn-snapshot-local\", \"lab3-mvn-dev-local\", \"lab3-mvn-prod-local\", \"mvn-remote\"] }"
 
     # refer 1 virtual repo: 
-    repoResponse=$(jf rt curl -XPUT /artifactory/api/repositories/lab3-mvn-virtual --header 'Content-Type: application/json' --data "$virtualReposData")
+    repoResponse=$(jf rt curl -XPUT /artifactory/api/repositories/lab3-mvn-virtual --header 'Content-Type: application/json' --data "$reposData")
     printf "VIRTUAL Repository created:\n $repoResponse \n\n"
 }
 

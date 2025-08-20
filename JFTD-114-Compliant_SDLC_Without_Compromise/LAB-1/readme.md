@@ -16,14 +16,12 @@ The script automates the configuration of a JFrog Artifactory instance by settin
 ## Artifactory 
 ### Create repositories using CLI
 - Run the command in the *LAB-1* folder
-    - Virtual
-    - Local
     - Remote
+    - Local
+    - Virtual
 ````
     ./setup-repos.sh
 ````
-
-
 
 
 ## Curation
