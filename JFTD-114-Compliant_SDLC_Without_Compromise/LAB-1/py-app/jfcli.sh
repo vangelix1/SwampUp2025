@@ -1,5 +1,5 @@
 # TOKEN SETUP
-#jf config add academy --url=http://academy-artifactory --user=admin --password=Admin1234! --interactive=false --overwrite=true 
+# jf config add academy --url='http://academy-artifactory' --user='admin' --password='Admin1234!' --interactive=false --overwrite=true 
 # jf config show
 # jf config use academy
 

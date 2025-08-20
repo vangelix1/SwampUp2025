@@ -14,6 +14,11 @@ The script automates the configuration of a JFrog Artifactory instance by settin
 
 
 ## Artifactory 
+- change direcotry in IDE UI or IDE Terminal
+```
+cd ~/jfrog/JFTD-114-Compliant_SDLC_Without_Compromise/LAB-1
+```
+
 ### Create repositories using CLI
 - Run the command in the *LAB-1* folder
     - Remote
@@ -32,35 +37,42 @@ The script automates the configuration of a JFrog Artifactory instance by settin
 <br/>
 - Enter *Label Name* and *Description*
     - ` ALLOW-THIS `
-    - ` ALLOW PACKAGES`
+    - ` ALLOW PACKAGES `
 <img src="./images/catalog-labels-create.png" />
 <br/>
 - Click button `Save Label`
 
 
-
-
 ### Administration >> Curation Settings
-### Enable
-- login to JFrog Platform UI using the credentials
-- Go to 'Administration' tab
-- Enable Curation toggle
-<img src="./images/0-curation-enablement.png" />
+- Toggle to enable Curation
+<img src="./images/curation-enablement.png" />
 <br/>
-- Enable curation for repoisitories
-<img src="./images/1-curation-policies-enable-repo.png" />
+- Enable desired repositories
+<img src="./images/curation-enable-repos.png" />
 <br/>
-- Toggle ON for the repos creating using ./setup-repos.sh
-<img src="./images/2-curation-enable-repos.png" />
+- Toggle the remote repositories created using 'setup-repos.sh'
+<img src="./images/curation-enable-desired-repos.png" />
 <br/>
-- Create catalog label
-<img src="./images/3-curation-catalog-label.png" />
+- Navigate to Administration >> Curation Settings >> Conditions
+- Click buttion `Create Condition` 
+- Select 'Custom conditions templates' is `Block package unless it has a label in allowed labels list` and enter below values
+        - ` DEFAULT-BLOCK-ALL `
+        - ` ALLOW-THIS `
+<img src="./images/curation-custom-condition.png" />
 <br/>
-<img src="./images/3-curation-catalog-label-saved.png" />
-<br/>
-- Create policy
-<img src="./images/3-curation-create-policy.png" />
-<br/>
+- Navigate to Administration >> Curation Settings >> General
+- Click buttion `Create policy` and enter below values
+    - Policy Name is ` blocked-pypi-remote `
+    - Scope select 'Specific remote repositories' is ` pypi-remote ` 
+    <img src="./images/curation-policy-scope.png" /> <br/>
+    - Select 'Policy Condition' as ` DEFAULT-BLOCK-ALL `
+    <img src="./images/curation-policy-condition.png" /> <br/>
+    - Select 'Waiver label' as ` ALLOW-THIS ` and 'Justification' as ` Allow for Swampup Lab `
+    <img src="./images/curation-policy-waiver.png" /> <br/>
+    - Actions & Notifcation 
+        - Select the required action if a violation occurs as ` Block `
+        - Configure the waiver request options for blocked packages as ` Manual approved `
+        - Owner Groups as ` sup-admin `
 
 
 
