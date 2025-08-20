@@ -1,4 +1,4 @@
-#
+# Lab 2: Identify Secrets & Malicious Indicators
 
 
 Reference
