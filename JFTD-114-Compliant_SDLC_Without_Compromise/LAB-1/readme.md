@@ -23,6 +23,7 @@ Run the setup script to automatically create three remote repositories (for Mave
     ./setup-repos.sh
 ````
 This script will create the remote, local, and virtual repositories needed for the lab.
+<img src="./images/repos-created.png" /> <br/>
 
 ## Curation Policy Setup
 Now, let's configure the curation policy in the JFrog Platform UI.
@@ -37,9 +38,13 @@ Labels are used to tag packages, and we'll use one to identify packages that are
 
 - Enter the following details:
     - Label Name: ` ALLOW-THIS `
-    - Description: ` ALLOW PACKAGES `
+    - Description: ` ALLOW PACKAGES  `
 
-<img src="./images/catalog-labels-create.png" /> <br/>
+- Enter the following details:
+    - Label Name: ` SADMIN-ALLOW `
+    - Description: ` Allowed by Security Admin for Demo purpose only  `
+
+<img src="./images/catalog-labels-list.png" /> <br/>
 
 - Click **Save Label**.
 
@@ -75,7 +80,7 @@ Finally, assemble the components into a policy that applies to a specific reposi
 
 - Navigate to **Administration** >> **Curation Settings** and select the General tab.
 - Click **Create policy** and enter the following details:
-    - Policy Name: `blocked-pypi-remote`
+    - Policy Name: `curation-blocked-remote`
     - Scope: Select **Specific remote repositories** and choose the `pypi-remote` repository created by the script.
 
     <img src="./images/curation-policy-scope.png" /> <br/>
@@ -84,7 +89,7 @@ Finally, assemble the components into a policy that applies to a specific reposi
 
     <img src="./images/curation-policy-condition.png" /> <br/>
 
-    - Waiver label: `ALLOW-THIS`
+    - Waiver label: `SADMIN-ALLOW`
     - Justification: `Allow for Swampup Lab`
 
     <img src="./images/curation-policy-waiver.png" /> <br/>
