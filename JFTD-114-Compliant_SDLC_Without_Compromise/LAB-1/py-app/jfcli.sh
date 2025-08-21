@@ -6,7 +6,7 @@
 
 # Config - Artifactory info
 export JFROG_CLI_LOG_LEVEL="DEBUG" 
-export RT_REPO_REMOTE="pypi-remote" 
+export RT_REPO_REMOTE="jftd114-pypi-remote" 
 
 echo "JFROG_CLI_LOG_LEVEL: $JFROG_CLI_LOG_LEVEL \n RT_REPO_REMOTE: $RT_PY_REMOTE_REPO"
 
