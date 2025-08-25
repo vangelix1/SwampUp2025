@@ -31,33 +31,7 @@ do
 done
 log_task "Artifactory is responding"
 
-jf c rm academy1 --quiet
 
-while true; do
-    # Try with access token first
-    jf config add academy1 \
-        --url=http://academy-artifactory \
-        --access-token "$JFROG_ACCESS_TOKEN" \
-        --interactive=false
-
-    if [ $? -eq 0 ]; then
-        break
-    fi
-
-    # If access token fails, try with user/password
-    jf config add academy1 \
-        --url=http://academy-artifactory \
-        --user=admin \
-        --password=Admin1234! \
-        --interactive=false
-
-    if [ $? -eq 0 ]; then
-        break
-    fi
-
-    # Retry after a delay
-    sleep 20
-done
 
 log_task "JF Config executed"
 
