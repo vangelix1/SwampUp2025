@@ -85,7 +85,7 @@ jf xr curl -XPOST "api/v1/curation/policies" \
   "condition_id": "5",
   "scope": "all_repos",
   "policy_action": "block",
-  "waiver_request_config": "manual"
+  "waiver_request_config": "auto_approved"
 }'
 
 log_task "END - Creating Curation Policy for CVE with CVSS score between 7.0 and 8.9 (with or without a fix version available)"
