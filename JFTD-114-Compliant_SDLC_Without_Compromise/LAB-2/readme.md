@@ -30,6 +30,7 @@ Before you begin, make sure you have the following:
 <img src="./images/vscode-5.png" /> <br/>
 
 - Analyze a Vulnerability: Click on one of the vulnerable files, such as profile.js, to view the details of the security issue. The "PROBLEMS" tab at the bottom will show you information about the vulnerability, including its severity and the exact line of code where it is located.
+
 <img src="./images/vscode-6.png" /> <br/>
 <img src="./images/vscode-7.png" /> <br/>
 
@@ -42,4 +43,4 @@ In this lab, you learned how integrating security scanning directly into your ID
 
 ## References
 - Source code forked from https://github.com/OWASP/NodeGoat
-
+- JFrog IDE: https://jfrog.com/help/r/jfrog-security-user-guide/shift-left-on-security/ides 

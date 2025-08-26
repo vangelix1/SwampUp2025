@@ -1,31 +1,93 @@
 # Lab 3: JFrog RLM & Evidence
 This lab demonstrates an end-to-end workflow for building a Maven project, creating a secure and auditable Release Bundle, and promoting it through an environment while attaching signed evidence at each stage.
 
-## Initial Setup & Configuration
-- Set up a connection to your JFrog instance named academy and make it the active configuration.
-- Define variables for your Maven virtual repository, signing keys for Release Bundles and Evidence, and the build name/ID. This centralizes configuration and makes the script reusable.
+You will perform the following actions using the JFrog CLI:
+- Build a Maven project and publish the build information to Artifactory.
+- Generate a Software Bill of Materials (SBOM).
+- Create and sign a Release Bundle v2.
+- Promote the release bundle through DEV and PROD environments.
+- Capture signed evidence at each critical stage of the pipeline.
 
-## Build the Maven Project & Publish Build-Info
-Next, you'll build your Java application using Maven and publish the comprehensive build information to Artifactory.
-- Configure Maven Repositories: Use jf mvnc to automatically configure Maven to resolve dependencies from your specified Artifactory virtual repository.
-- Run the Maven Build: Execute a clean install build using the jf mvn wrapper. This command captures all dependencies, artifacts, and environment details.
-- Publish Build-Info: Use jf rt bp to upload the collected build information to your JFrog Platform, creating a detailed and reproducible record of the build.
-- Attach Initial Evidence: Create and attach a signed piece of evidence to the build-info itself, attesting that the build has been successfully published.
+## Prerequisites
+Before you begin, ensure you have the following:
+- Access to a JFrog Platform environment.
+- JFrog CLI installed and configured in your terminal.
+- A Java Development Kit (JDK) and Maven installed.
+- The lab project files, including the spring-petclinic source code and the provided scripts.
 
-## Create the Release Bundle (RBv2)
-With a successful build published, you will now package it into a signed, immutable Release Bundle.
-- Define the Bundle Contents: Create a specification file that tells JFrog to include all artifacts and dependencies from the build you just published.
-- Create the Release Bundle: Run the jf rbc command, pointing to your specification and a signing key. This creates a tamper-proof, signed bundle that represents your release candidate.
+## Setup Instructions
+First, you need to prepare your JFrog environment by setting up repositories and signing keys.
 
-## Promote the Release Bundle & Attach Promotion Evidence
-Finally, you will promote the Release Bundle to the "DEV" environment and record evidence of this action.
-- Promote to DEV: Use the jf rbp command to promote the Release Bundle to the DEV environment. This action can trigger repository moves or copies as defined in your lifecycle management setup.
-- Attach Promotion Evidence: Create a new JSON evidence file containing details about the promotion (e.g., mock test results, actor). Attach and sign this evidence directly to the Release Bundle, creating an auditable record that this specific version passed the "DEV" gate.
+### Configure Repositories
+This script will create the necessary local, remote, and virtual Maven repositories in your Artifactory instance.
+```
+./setup-repos.sh
+```
+This will create the following repositories:
+- jftd114-mvn-remote (a remote proxy for Maven Central)
+- jftd114-mvn-snapshot-local
+- jftd114-mvn-dev-local
+- jftd114-mvn-prod-local
+- jftd114-mvn-virtual (an aggregation of all the above)
 
+### Create GPG and Evidence Signing Keys
+Next, you need to generate GPG keys for signing your release bundles and key pairs for creating signed evidence.
 
+Run the ```create-keys.sh``` script with a unique key name. This name will be used for both the GPG key and the evidence signing key alias.
+
+## Lab Execution
+Now you are ready to execute the full software supply chain pipeline. The jfcli.sh script automates this entire process.
+
+### Run the Pipeline Script
+Execute the ```jfcli.sh``` script from your terminal:
+```
+./jfcli.sh
+
+```
+This script will perform the following sequence of actions:
+
+- Maven Build: It compiles the spring-petclinic application, resolves dependencies from the virtual repository, and collects build information.
+```
+jf mvn clean install ...
+```
+
+- Publish Build Info: The collected build information, which includes the SBOM, is published to Artifactory.
+```
+jf rt bp ${BUILD_NAME} ${BUILD_ID}
+```
+
+- Create Release Bundle v2: A secure, immutable release bundle is created from the build and signed with your GPG key.
+```
+jf rbc ${BUILD_NAME} ${BUILD_ID} --signing-key="${RBv2_SIGNING_KEY}"
+```
+
+- Promote to DEV: The release bundle is promoted to the "DEV" environment, moving the artifacts to the jftd114-mvn-dev-local repository.
+```
+jf rbp ${BUILD_NAME} ${BUILD_ID} DEV ...
+```
+
+- Capture Evidence for DEV: A signed piece of evidence is created and attached to the release bundle, attesting to its successful promotion to DEV.
+```
+jf evd create --release-bundle ${BUILD_NAME} ...
+```
+
+- Promote to PROD: The release bundle is then promoted from DEV to the "PROD" environment.
+```
+jf rbp ${BUILD_NAME} ${BUILD_ID} PROD ...
+```
+
+- Capture Evidence for PROD: A final piece of signed evidence is created for the promotion to the PROD environment.
+```
+jf evd create --release-bundle ${BUILD_NAME} ...
+```
+
+## Conclusion
+Excellent work! You have successfully executed a secure software supply chain pipeline.
+
+In this lab, you have seen how JFrog CLI can automate the process of building, securing, and promoting software releases. By creating signed release bundles and capturing evidence at each stage, you can build a verifiable and tamper-proof audit trail for your software releases, ensuring a compliant and secure SDLC.
 
 ## References
-- [RBv2 keys](https://jfrog.com/help/r/jfrog-artifactory-documentation/create-signing-keys-for-release-bundles-v2) 
+- RBv2 keys# https://jfrog.com/help/r/jfrog-artifactory-documentation/create-signing-keys-for-release-bundles-v2
     - Administration >> Keys Managment >> Signing Keys
-- [Evidence keys](https://jfrog.com/help/r/jfrog-artifactory-documentation/evidence-setup)
+- Evidence keys# https://jfrog.com/help/r/jfrog-artifactory-documentation/evidence-setup
     - Administration >> Keys Managment >> Public Keys
