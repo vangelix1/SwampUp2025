@@ -24,3 +24,7 @@ jf pipc --repo-resolve=${RT_REPO_REMOTE}
 
 jf ca --requirements-file=requirements.txt --format=table --threads=100
 ```
+
+
+# References
+- https://jfrog.com/help/r/jfrog-rest-apis/jfrog-curation-rest-apis

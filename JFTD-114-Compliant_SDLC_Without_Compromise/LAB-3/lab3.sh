@@ -6,6 +6,9 @@ arg=${1}
 # jf config use academy
 jf rt ping
 
+echo "$json_data" | jq -r '.repos."remote-py"'
+
+
 BUILD_ID="$(date '+%Y-%m-%d-%H-%M')" 
 export RT_PY_REPO_VIRTUAL="lab3app-py-virtual-$BUILD_ID" RT_PY_REPO_REMOTE="lab3app-py-remote-$BUILD_ID" RT_PY_REPO_DEFAULT_LOCAL="lab3app-py-default-local-$BUILD_ID" RT_PY_REPO_DEV_LOCAL="lab3app-py-dev-local-$BUILD_ID" RT_PY_REPO_PROD_LOCAL="lab3app-py-prod-local-$BUILD_ID"
 
