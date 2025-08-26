@@ -1,54 +1,43 @@
 # Lab 2: Identify Secrets & Malicious Indicators
+This lab will walk you through the process of using the JFrog extension for Visual Studio Code to scan NodeJS project, analyze the results, and understand the security issues present in your open-source dependencies.
 
 ## Prerequisites
 Before you begin, make sure you have the following:
-- VS Code: Installed on your machine.
+- VS Code: Installed on the lab machine.
 - JFrog Platform Account: You'll need the URL and login credentials for your JFrog environment.
-- A Project to Scan: Have a sample project with some code ready to be scanne
+    - url: http://academy-artifactory/
+    - user: admin
+    - password: Admin1234!
+- A Project to Scan: Sample NodeJS project is ready to be scanned
 
-### Setup and Authentication
-First, let's get the JFrog extension installed and connected to your account.
-- Pre installed the JFrog Extension in the IDE 
+## Setup & Instructions
+- Open the JFrog Extension: In the Visual Studio Code activity bar on the left, click on the JFrog frog icon to open the extension.
+<img src="./images/vscode-0.png" /> <br/>
 
-### Connect to Your JFrog Platform:
-- Click on the JFrog icon in the Activity Bar to open the JFrog panel.
-- You will be prompted to sign in. Enter your JFrog Platform URL and your Username and Password/Access Token.
-- Click Sign In to establish the connection. If you use SSO, there's an option for that as well.
+- Connect to Your JFrog Platform: A pop-up will appear asking you to sign in using JFrog CLI. Click "Sure!" and follow the prompts to authenticate with your JFrog Platform URL and credentials.
+<img src="./images/vscode-1.png" /> <br/>
 
-### Configuring Security Policies and Scans
-Now, let's set up the rules that JFrog will use to scan your code. These are managed through "Policies" and "Watches" in your JFrog Platform.
-- Create a Security Policy in JFrog Xray:
-    - Log in to your JFrog Platform in your web browser.
-    - Navigate to the Administration module, then go to Xray > Watches & Policies.
-    - Click on the Policies tab and then New Policy.
-    - Give your policy a Name (e.g., "Secrets-Detection-Policy") and choose the Security policy type.
-    - Click Add Rule. For this lab, create a rule that triggers on "High" or "Critical" severity issues. This will be enough to catch most secrets.
-    - Save the rule and the policy.
-- Create a Watch to Apply the Policy:
-    - In the same Watches & Policies section, go to the Watches tab and click New Watch.
-    - Give your watch a Name (e.g., "IDE-Scans-Watch").
-    - Under Manage Resources, add the repositories or builds you want this watch to monitor. For local IDE scans, you can assign it to a project you've set up in JFrog.
-    - Under Manage Policies, add the "Secrets-Detection-Policy" you just created to the watch.
-    - Click Create to save the watch.
-- Configure the VS Code Extension to Use the Policy:
-    - Back in VS Code, open the Command Palette (Ctrl+Shift+P).
-    - Type "JFrog: Focus on project" and select the project associated with your watch. This tells the extension which set of policies to apply.
+- Open the Project Folder: Once authenticated, you need to open the lab's project folder. Click on "Open Folder" and navigate to the directory /root/jfrog/JFTD-114-Compliant_SDLC_Without_Compromise/LAB-2/node-app.
+<img src="./images/vscode-2.png" /> <br/>
 
-### Running the Scan
-With everything configured, you're ready to scan your project.
-- Open the Project: Make sure you have your project folder open in VS Code.
-- Initiate the Scan:
-    - Click on the JFrog icon in the Activity Bar.
-    - The extension will automatically start scanning your project's dependencies and code. You should see a progress indicator in the JFrog panel.
+- Explore the Project: You can now see the file structure of the node-app project in the Explorer view. This is a simple Node.js application with several dependencies.
+<img src="./images/vscode-3.png" /> <br/>
 
-### Analyzing the Results
-Once the scan is complete, the results will be displayed in the JFrog panel.
-- View the Issues: The panel will show a tree view of your project's components and any discovered vulnerabilities.
-- Filter for Secrets: Look for issues categorized as "Exposed Secrets" or those with high severity.
-- Get More Details: Click on an issue to see detailed information, including:
-    - The file and line number where the secret was found.
-    - The type of secret (e.g., API key, password).
-    - Remediation advice, which usually involves moving the secret to a secure vault or environment variable.
+- Initiate a Scan: The JFrog extension will automatically start scanning your project for security vulnerabilities. You can see the "Scanning..." status in the JFrog extension view.
+<img src="./images/vscode-4.png" /> <br/>
+
+- View Scan Results: Once the scan is complete, the JFrog extension will display a list of all the security issues found in your project's dependencies.
+<img src="./images/vscode-5.png" /> <br/>
+
+- Analyze a Vulnerability: Click on one of the vulnerable files, such as profile.js, to view the details of the security issue. The "PROBLEMS" tab at the bottom will show you information about the vulnerability, including its severity and the exact line of code where it is located.
+<img src="./images/vscode-6.png" /> <br/>
+<img src="./images/vscode-7.png" /> <br/>
+
+
+## Conclusion
+Congratulations! You have successfully scanned a Node.js application for security vulnerabilities using the JFrog extension for Visual Studio Code.
+<br/>
+In this lab, you learned how integrating security scanning directly into your IDE can help you shift security left, enabling you to find and fix issues earlier in the development lifecycle. This proactive approach to security helps reduce risk and ensures that you are building more secure applications.
 
 
 ## References
