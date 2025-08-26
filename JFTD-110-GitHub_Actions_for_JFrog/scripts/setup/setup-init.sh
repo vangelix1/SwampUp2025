@@ -64,6 +64,32 @@ jf xr curl -XPOST "ui/unified/binMgr/v1/setIndexedBuilds" \
 }'
 log_task "Indexed All builds by Pattern"
 
+log_task "START - Creating Curation Policy for malicious"
+jf xr curl -XPOST "api/v1/curation/policies" \
+-H "content-type:application/json" --server-id=academy \
+-d ' {
+  "name": "maliciouspackage",
+  "condition_id": "1",
+  "scope": "all_repos",
+  "policy_action": "block",
+  "waiver_request_config": "forbidden"
+}'
+log_task "END - Creating Curation Policy for malicious"
+
+log_task "START - Creating Curation Policy for CVE with CVSS score between 7.0 and 8.9 (with or without a fix version available)"
+
+jf xr curl -XPOST "api/v1/curation/policies" \
+-H "content-type:application/json" --server-id=academy \
+-d ' {
+  "name": "CVEwithCVSS7-9",
+  "condition_id": "5",
+  "scope": "all_repos",
+  "policy_action": "block",
+  "waiver_request_config": "auto_approved"
+}'
+
+log_task "END - Creating Curation Policy for CVE with CVSS score between 7.0 and 8.9 (with or without a fix version available)"
+
 # chmod +x JFTD-110-GitHub_Actions_for_JFrog/labs1_setup/update_repo_environments.sh
 
 # curl -X POST \
