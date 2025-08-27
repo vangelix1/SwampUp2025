@@ -1,5 +1,5 @@
-from .model import FraudDetectionModel
+from .model import LLMFineTuner
 
 
 def load_model():
-    return FraudDetectionModel()
+    return LLMFineTuner()

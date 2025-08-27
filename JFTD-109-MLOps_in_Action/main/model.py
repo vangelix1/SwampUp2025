@@ -1,116 +1,215 @@
-import pandas as pd
-import frogml
-from frogml import FrogMlModel
-from frogml_core.model.schema import ExplicitFeature, ModelSchema, InferenceOutput
-from frogml_core.tools.logger import get_qwak_logger
-from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold
-from catboost import CatBoostClassifier
-from main.data_processor import DataPreprocessor
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+import platform
+import torch
+from qwak.model.base import QwakModel
+from qwak.model.schema import ExplicitFeature, ModelSchema
+from qwak.model.adapters import JsonInputAdapter, JsonOutputAdapter
+import qwak
+from transformers import (
+    Trainer,
+    TrainingArguments,
+    DataCollatorForLanguageModeling,
+    pipeline,
+    AutoTokenizer,
+    AutoModelForCausalLM
+)
+from peft import PeftModel, PeftConfig
 
-logger = get_qwak_logger()
+# Import our refactored utilities and configuration
+import main.config as config
+import main.data_utils as data_utils
+import main.model_utils as model_utils
 
-class FraudDetectionModel(FrogMlModel):
+class LLMFineTuner(QwakModel):
+    """
+    A QwakModel class to fine-tune and serve a Llama2 8B model.
+
+    This class is a high-level orchestrator, delegating tasks
+    to helper modules. It defines the model's lifecycle for the Qwak platform.
+    """
 
     def __init__(self):
-
-        # Create a Catboost Classifier
+        """
+        Initializes paths and placeholders. No heavy objects are stored here
+        to keep the initial object light before pickling.
+        """
+        self.generator = None
         self.model = None
-
-        self.data_preprocessor = DataPreprocessor()
-
-        # Define the parameter grid
-        self.param_grid = {
-            'iterations': [100, 200, 300, 400],  # Number of boosting iterations
-            'learning_rate': [0.01, 0.03, 0.05, 0.1],  # Step size shrinkage
-            'depth': [4, 6, 8, 10],  # Depth of trees
-            'l2_leaf_reg': [1, 3, 5, 7],  # L2 regularization coefficient
-            'border_count': [32, 64, 128],  # Number of splits for numerical features
-            'random_strength': [0.1, 0.5, 1], # Amount of randomness to add to the score when choosing the tree structure.
-            'verbose': [0] # Suppress verbose output during training
-        }
-
-        self.input_dataset = 'main/small_fraud_dataset.csv'
-
-
-    # ----- TRAINING LOGIC ------
-    def build(self):
-
-        # Read Data
-        df = pd.read_csv(self.input_dataset)
-
-        # Preprocess data
-        X_train, X_test, y_train, y_test = self.data_preprocessor.preprocess_training_data(df)
-
-        classifier = CatBoostClassifier(random_state=42, eval_metric='F1') # Use F1 for fraud, set random_state
+        self.tokenizer = None
         
-        # Use StratifiedKFold for cross-validation to handle imbalanced data
-        skf = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)  # Adjust n_splits
+        # Define the directory where the fine-tuned adapter will be saved.
+        if platform.system() == 'Darwin': # For local testing
+            self.adapter_output_dir = './llama-imdb-finetuned'
+        else: # For the Qwak environment
+            self.adapter_output_dir = "/qwak/model_dir/llama-imdb-finetuned"
 
-        # Create RandomizedSearchCV
-        random_search = RandomizedSearchCV(
-            estimator=classifier,
-            param_distributions=self.param_grid,
-            n_iter=10,  # Number of random combinations to try
-            scoring='f1',  # Use F1-score for evaluation (crucial for fraud)
-            cv=skf,  # Use stratified k-fold cross-validation
-            verbose=1,
-            random_state=42,
-            n_jobs=-1  # Use all available cores
+
+    def build(self):
+        """
+        The main training logic. This method is called by Qwak to build the model.
+        It trains the model and saves the resulting LoRA adapter and tokenizer to disk.
+        """
+        print(f"Starting build process for model: {config.MODEL_ID}")
+        model_utils.login_to_hf()
+
+        # 1. Load Tokenizer and Model using our updated utility functions
+        tokenizer = model_utils.get_tokenizer(config.MODEL_ID)
+
+        # Using left-padding with the beginning-of-sentence token is more robust.
+        tokenizer.padding_side = 'left'
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.bos_token
+
+
+        model = model_utils.get_model(config.MODEL_ID)
+
+        # 2. Load and Tokenize Dataset
+        tokenized_dataset = data_utils.load_and_tokenize_dataset(
+            tokenizer,
+            percentage=config.DATASET_SAMPLE_PERCENTAGE,
+            max_length=config.MAX_SEQ_LENGTH
         )
 
-        # Fit the RandomizedSearchCV object to the training data
-        random_search.fit(X_train, y_train)
+        # 3. Configure and run the Hugging Face Trainer
+        use_fp16 = False
+        use_bf16 = False
+        if torch.cuda.is_available():
+            print("✅ CUDA detected. Configuring mixed precision.")
+            if torch.cuda.is_bf16_supported():
+                use_bf16 = True
+            else:
+                use_fp16 = True
+        else:
+            print("⚠️ No CUDA detected. Mixed precision flags (fp16/bf16) will be disabled.")
 
-        # Print the best hyperparameters
-        print("Best hyperparameters:", random_search.best_params_)
 
-        # Get the best model
-        self.model = random_search.best_estimator_
+        training_args = TrainingArguments(
+            output_dir=self.adapter_output_dir,
+            overwrite_output_dir=True,
+            num_train_epochs=config.TRAINING_EPOCHS,
+            per_device_train_batch_size=config.TRAIN_BATCH_SIZE,
+            per_device_eval_batch_size=config.TRAIN_BATCH_SIZE,
+            learning_rate=config.LEARNING_RATE,
+            weight_decay=config.WEIGHT_DECAY,
+            bf16=use_bf16,
+            fp16=use_fp16,
+            logging_steps=10,
+            save_total_limit=1,
+            eval_strategy="steps",
+            eval_steps=100,
+        )
 
-        # Evaluate the best model
-        y_test_pred = self.model.predict(X_test)
+        trainer = Trainer(
+            model=model,
+            args=training_args,
+            data_collator=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
+            train_dataset=tokenized_dataset["train"],
+            eval_dataset=tokenized_dataset["test"],
+        )
 
-        metrics = {
-            'accuracy': accuracy_score(y_test, y_test_pred),
-            'f1_score': f1_score(y_test, y_test_pred),
-            'precision': precision_score(y_test, y_test_pred),
-            'recall': recall_score(y_test, y_test_pred)
+        # 4. Start Training and Log Artifacts
+        print("Starting model training...")
+        train_output = trainer.train()
+        print("Training complete.")
+        
+        # --- ADDITION: Log parameters and metrics ---
+        print("Logging parameters and metrics...")
+
+        # Log all hyperparameters used for the training run
+        params_to_log = {
+            "model_id": config.MODEL_ID,
+            "learning_rate": config.LEARNING_RATE,
+            "epochs": config.TRAINING_EPOCHS,
+            "batch_size": config.TRAIN_BATCH_SIZE,
+            "max_seq_length": config.MAX_SEQ_LENGTH,
+            "lora_r": config.LORA_CONFIG.r,
+            "lora_alpha": config.LORA_CONFIG.lora_alpha,
+            "lora_target_modules": str(config.LORA_CONFIG.target_modules),
         }
+        qwak.log_param(params_to_log)
 
-        qwak.log_param(random_search.best_params_)
-        qwak.log_metric(metrics)
-        qwak.log_data(pd.DataFrame(X_train), tag = 'train_data')
+        # Log the final metrics from the training process
+        final_metrics = train_output.metrics
+        
+        # Find the last evaluation loss from the history
+        eval_logs = [log for log in trainer.state.log_history if 'eval_loss' in log]
+        if eval_logs:
+            final_metrics['final_eval_loss'] = eval_logs[-1]['eval_loss']
+
+        qwak.log_metric(final_metrics)
+        print(f"Logged Parameters: {params_to_log}")
+        print(f"Logged Metrics: {final_metrics}")
+        # --- END ADDITION ---
+
+        trainer.save_model(self.adapter_output_dir)
+        tokenizer.save_pretrained(self.adapter_output_dir)
+        print(f"Adapter and tokenizer saved to {self.adapter_output_dir}")
 
 
-    # ----- INFERENCE LOGIC ------
-    @frogml.api()
-    def predict(self, df, analytics_logger):
+    def initialize_model(self):
+        """
+        Initializes the model for inference. It loads the base model and
+        attaches the fine-tuned LoRA adapter, conditionally using quantization.
+        """
+        print("Initializing model for inference...")
+        
+        adapter_config = PeftConfig.from_pretrained(self.adapter_output_dir)
+        self.tokenizer = AutoTokenizer.from_pretrained(self.adapter_output_dir)
 
-        prediction_data = self.data_preprocessor.preprocess_inference_data(df)
+        # Using left-padding with the beginning-of-sentence token is more robust for generation.
+        self.tokenizer.padding_side = 'left'
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.bos_token
 
-        predictions = self.model.predict(prediction_data)
+        # Get hardware-specific settings from the centralized utility function
+        hw_config = model_utils.get_hardware_config()
+        
+        # Load the base model with the appropriate config
+        base_model = AutoModelForCausalLM.from_pretrained(
+            adapter_config.base_model_name_or_path,
+            quantization_config=hw_config["quantization_config"],
+            device_map=hw_config["device_map_arg"],
+            torch_dtype=hw_config["torch_dtype"],
+            trust_remote_code=True,
+        )
+        
+        # Create a PeftModel by attaching the loaded adapter to the base model.
+        self.model = PeftModel.from_pretrained(base_model, self.adapter_output_dir)
+        print("Successfully loaded base model and attached LoRA adapter.")
 
-        analytics_logger.log_many(
-            values={'another_column': 'some_value', 'something_else': 123}
+        # Explicitly move the model to MPS if not using device_map
+        if not hw_config["device_map_arg"] and torch.backends.mps.is_available():
+            self.model.to("mps")
+            print("Model explicitly moved to MPS device.")
+
+        # Let the pipeline figure out the device from the loaded model
+        self.generator = pipeline(
+            "text-generation",
+            model=self.model,
+            tokenizer=self.tokenizer,
         )
 
-        return pd.DataFrame({'Fraud': predictions})
 
-
-    # ----- INPUT/OUTPUT SCHEMA ------
     def schema(self):
         """
-        schema() define the model input structure.
-        Use it to enforce the structure of incoming requests.
+        Defines the input schema for the model's prediction API.
         """
-        model_schema = ModelSchema(
-            inputs=[
-                ExplicitFeature(name="Time", type=float), #Time
-                *[ExplicitFeature(name=f"V{i+1}", type=float) for i in range(28)], # List comprehension for V0-V29
-                ExplicitFeature(name="Amount", type=float), #Amount
-            ],
-            outputs=[
-                InferenceOutput(name="Fraud", type=int)
-            ])
-        return model_schema
+        return ModelSchema(inputs=[ExplicitFeature(name="prompt", type=str)])
+
+    @qwak.api(input_adapter=JsonInputAdapter(), output_adapter=JsonOutputAdapter())
+    def predict(self, json_objects):
+        """
+        The main inference method. It takes a list of JSON objects and returns predictions.
+        """
+        prompts = [data['prompt'] for data in json_objects]
+        formatted_prompts = [config.get_prompt(p) for p in prompts]
+
+        outputs = self.generator(
+            formatted_prompts,
+            max_new_tokens=50,
+            do_sample=True,
+            temperature = 0.7,
+            top_k=50,
+            top_p=0.95,
+        )
+        
+        return [output[0]['generated_text'] for output in outputs]
