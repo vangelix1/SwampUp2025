@@ -1,9 +1,12 @@
 import platform
 import torch
-from qwak.model.base import QwakModel
-from qwak.model.schema import ExplicitFeature, ModelSchema
-from qwak.model.adapters import JsonInputAdapter, JsonOutputAdapter
-import qwak
+
+import frogml
+from frogml import FrogMlModel
+from frogml.sdk.model.adapters import DataFrameInputAdapter, JsonOutputAdapter, JsonInputAdapter
+from frogml.sdk.model.schema import ExplicitFeature, InferenceOutput, ModelSchema
+from frogml.core.clients.secret_service import SecretServiceClient
+
 from transformers import (
     Trainer,
     TrainingArguments,
@@ -19,12 +22,12 @@ import main.config as config
 import main.data_utils as data_utils
 import main.model_utils as model_utils
 
-class LLMFineTuner(QwakModel):
+class LLMFineTuner(FrogMlModel):
     """
-    A QwakModel class to fine-tune and serve a Llama2 8B model.
+    A FrogMlModel class to fine-tune and serve a Llama2 8B model.
 
     This class is a high-level orchestrator, delegating tasks
-    to helper modules. It defines the model's lifecycle for the Qwak platform.
+    to helper modules. It defines the model's lifecycle for the FrogMl platform.
     """
 
     def __init__(self):
@@ -125,7 +128,7 @@ class LLMFineTuner(QwakModel):
             "lora_alpha": config.LORA_CONFIG.lora_alpha,
             "lora_target_modules": str(config.LORA_CONFIG.target_modules),
         }
-        qwak.log_param(params_to_log)
+        frogml.log_param(params_to_log)
 
         # Log the final metrics from the training process
         final_metrics = train_output.metrics
@@ -195,7 +198,7 @@ class LLMFineTuner(QwakModel):
         """
         return ModelSchema(inputs=[ExplicitFeature(name="prompt", type=str)])
 
-    @qwak.api(input_adapter=JsonInputAdapter(), output_adapter=JsonOutputAdapter())
+    @frogml.api(input_adapter=JsonInputAdapter(), output_adapter=JsonOutputAdapter())
     def predict(self, json_objects):
         """
         The main inference method. It takes a list of JSON objects and returns predictions.
