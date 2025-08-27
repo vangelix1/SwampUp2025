@@ -138,3 +138,5 @@ The designated approver (a member of the sup-admin group) manages the request in
 After approval, the developer can successfully resolve and download the dependency into their project. 🎉
 
 
+## References
+- JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration#building-python-packages

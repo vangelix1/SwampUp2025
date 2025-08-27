@@ -1,25 +1,21 @@
 #!/bin/bash
 set -euo pipefail
 
-# ========== Configurable Inputs ==========
-KEY_NAME="${1:-}"
-if [ -z "$KEY_NAME" ]; then
-  echo "Usage: $0 <key-name>"
-  exit 1
-fi
+# ========== RLM: RBv2 Signing Key. ref https://jfrog.com/help/r/jfrog-artifactory-documentation/create-signing-keys-for-release-bundles-v2
+printf "\n ========== Generating GPG key pair for RBv2 signing ========== \n" 
+GPG_HOMEDIR=$(mktemp -d)
+JSON_FILE_PATH=$(mktemp)
+mkdir -p "$GPG_HOMEDIR"
+chmod 700 "$GPG_HOMEDIR"
 
-EMAIL="${KEY_NAME}@yourdomain.com"
-ALIAS="$KEY_NAME"
-COMMENT="$KEY_NAME"
+KEY_NAME_RBv2="jftd114-rbv2_key"
+EMAIL="${KEY_NAME_RBv2}@yourdomain.com"
+ALIAS="$KEY_NAME_RBv2"
+COMMENT="$KEY_NAME_RBv2"
 KEY_LENGTH=4096
 EXPIRE_DATE=0
 PASSPHRASE="${PASSPHRASE:-}"  # Optional: set via env var if needed
 
-# ========== Temp Working Directories ==========
-GPG_HOMEDIR=$(mktemp -d)
-JSON_FILE_PATH=$(mktemp)
-
-# ========== Generate GPG Key ==========
 cat > keydetails <<EOF
   %echo Generating a GPG key
   Key-Type: RSA
@@ -32,58 +28,78 @@ cat > keydetails <<EOF
   Expire-Date: $EXPIRE_DATE
 EOF
 
-if [ -n "$PASSPHRASE" ]; then
-  echo "  Passphrase: $PASSPHRASE" >> keydetails
-else
-  echo "  %no-ask-passphrase" >> keydetails
-  echo "  %no-protection" >> keydetails
-fi
+echo "  %no-ask-passphrase" >> keydetails
+echo "  %no-protection" >> keydetails
 
 cat >> keydetails <<EOF
   %commit
   %echo done
 EOF
 
-mkdir -p "$GPG_HOMEDIR"
-chmod 700 "$GPG_HOMEDIR"
 gpg --homedir "$GPG_HOMEDIR" --batch --gen-key keydetails
-rm -f keydetails
 
-# ========== Extract Key ID ==========
 KEY_ID=$(gpg --homedir "$GPG_HOMEDIR" --list-keys --with-colons "$EMAIL" | grep '^pub' | cut -d':' -f5 | head -n1)
+echo "GPG Key ID: $KEY_ID"
 
-# ========== Export Keys ==========
-if [ -n "$PASSPHRASE" ]; then
-  PRIV_KEY=$(gpg --armor --homedir "$GPG_HOMEDIR" --pinentry-mode loopback --passphrase "$PASSPHRASE" --export-secret-keys "$KEY_ID")
-else
-  PRIV_KEY=$(gpg --armor --homedir "$GPG_HOMEDIR" --export-secret-keys "$KEY_ID")
-fi
+PRIV_KEY=$(gpg --armor --homedir "$GPG_HOMEDIR" --export-secret-keys "$KEY_ID")
+PRIV_KEY_ESC=$(printf "%s" "$PRIV_KEY" | awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
 
 PUB_KEY=$(gpg --armor --homedir "$GPG_HOMEDIR" --export "$KEY_ID")
-
-# ========== Prepare JSON ==========
-PRIV_KEY_ESC=$(printf "%s" "$PRIV_KEY" | awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
 PUB_KEY_ESC=$(printf "%s" "$PUB_KEY" | awk '{printf "%s\\n", $0}' | sed 's/\\n$//')
 
 cat >"$JSON_FILE_PATH" <<EOF
 {
-  "pairName": "$KEY_NAME",
+  "pairName": "$KEY_NAME_RBv2",
   "pairType": "GPG",
   "alias": "$ALIAS",
   "privateKey": "$PRIV_KEY_ESC",
   "publicKey": "$PUB_KEY_ESC",
-  "passphrase": "$PASSPHRASE"
+  "passphrase": ""
 }
 EOF
 
-# ========== Upload to Artifactory ==========
+# DELETE RBv2 key if already exists 
+# jf rt curl -s -XDELETE "/api/security/keypair/jftd114-rbv2_key" -H 'Content-Type: application/json'
+jf rt curl -s -XDELETE "/api/security/keypair/$KEY_NAME_RBv2" -H 'Content-Type: application/json'
+
+# Upload Key via API https://jfrog.com/help/r/jfrog-rest-apis/create-key-pair 
 echo "Uploading GPG key pair to Artifactory..."
-jf rt curl -s -XPOST "/api/security/keypair" \
-  -H 'Content-Type: application/json' \
-  --data-binary @"$JSON_FILE_PATH"
+jf rt curl -s -v -XPOST "/api/security/keypair" -H 'Content-Type: application/json' --data-binary @"$JSON_FILE_PATH"
+echo "Key $KEY_NAME_RBv2 uploaded successfully."
+# GET Key to verify https://jfrog.com/help/r/jfrog-rest-apis/get-key-pair
+jf rt curl -s -XGET "/api/security/keypair/$KEY_NAME_RBv2" -H 'Content-Type: application/json'
 
-echo "Key $KEY_NAME uploaded successfully."
+# Evidence Signing Key. ref https://jfrog.com/help/r/jfrog-artifactory-documentation/evidence-setup
+printf "\n ========== Generating GPG key pair for Evidence signing ========== \n" 
+openssl genrsa -out evd_private.pem 2048
+openssl rsa -in evd_private.pem -pubout -out evd_public.pem
 
-# ========== Cleanup ==========
-# rm -rf "$GPG_HOMEDIR" "$JSON_FILE_PATH"
-# echo "Temporary files cleaned up."
+EVD_KEY_PRIVATE="$(cat evd_private.pem)" EVD_KEY_PUBLIC="$(cat evd_public.pem)" KEY_NAME_EVD="jftd114-evd_key" 
+
+cat >"$JSON_FILE_PATH" <<EOF
+{
+  "pairName": "$KEY_NAME_EVD",
+  "pairType": "RSA",
+  "alias": "$KEY_NAME_EVD",
+  "privateKey": "$EVD_KEY_PRIVATE",
+  "publicKey": "$EVD_KEY_PUBLIC",
+  "passphrase": ""
+}
+EOF
+
+# DELETE Evidence key if already exists 
+# jf rt curl -s -XDELETE "/api/security/keypair/jftd114-evd_key" -H 'Content-Type: application/json'
+jf rt curl -s -XDELETE "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: application/json'
+
+# Upload Key via API https://jfrog.com/help/r/jfrog-rest-apis/create-key-pair 
+echo "Uploading RSA key pair to Artifactory..."
+jf rt curl -s -XPOST "/api/security/keypair" -H 'Content-Type: application/json' --data-binary @"$JSON_FILE_PATH"
+echo "Key $KEY_NAME_EVD uploaded successfully."
+# GET Key to verify https://jfrog.com/help/r/jfrog-rest-apis/get-key-pair
+jf rt curl -s -XGET "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: application/json'
+
+
+# cleanup files
+printf "\n\n**** CLEAN UP ****\n\n"
+rm -f ./keydetails
+# rm -f *.pem

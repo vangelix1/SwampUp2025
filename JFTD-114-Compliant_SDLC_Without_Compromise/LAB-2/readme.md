@@ -44,3 +44,4 @@ In this lab, you learned how integrating security scanning directly into your ID
 ## References
 - Source code forked from https://github.com/OWASP/NodeGoat
 - JFrog IDE: https://jfrog.com/help/r/jfrog-security-user-guide/shift-left-on-security/ides 
+- JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration#building-npm-packages-using-the-npm-client

@@ -30,10 +30,17 @@ This will create the following repositories:
 - jftd114-mvn-prod-local
 - jftd114-mvn-virtual (an aggregation of all the above)
 
+<img src="./images/lab3-repo-0.png" /> <br/>
+<img src="./images/lab3-repo-1.png" /> <br/>
+<img src="./images/lab3-repo-2.png" /> <br/>
+
 ### Create GPG and Evidence Signing Keys
 Next, you need to generate GPG keys for signing your release bundles and key pairs for creating signed evidence.
 
 Run the ```create-keys.sh``` script with a unique key name. This name will be used for both the GPG key and the evidence signing key alias.
+
+<img src="./images/lab3-keys-0.png" /> <br/>
+<img src="./images/lab3-keys-1.png" /> <br/>
 
 ## Lab Execution
 Now you are ready to execute the full software supply chain pipeline. The jfcli.sh script automates this entire process.
@@ -91,3 +98,4 @@ In this lab, you have seen how JFrog CLI can automate the process of building, s
     - Administration >> Keys Managment >> Signing Keys
 - Evidence keys# https://jfrog.com/help/r/jfrog-artifactory-documentation/evidence-setup
     - Administration >> Keys Managment >> Public Keys
+- JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration#running-maven-builds

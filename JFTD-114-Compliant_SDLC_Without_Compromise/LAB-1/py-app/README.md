@@ -28,3 +28,5 @@ jf ca --requirements-file=requirements.txt --format=table --threads=100
 
 # References
 - https://jfrog.com/help/r/jfrog-rest-apis/jfrog-curation-rest-apis
+- JFrog CLI# https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/
+- 
