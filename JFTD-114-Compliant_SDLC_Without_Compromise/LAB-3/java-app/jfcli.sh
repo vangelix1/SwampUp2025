@@ -2,11 +2,14 @@ clear
 # TOKEN SETUP
 # jf config add academy --url='http://academy-artifactory' --user='admin' --password='Admin1234!' --interactive=false --overwrite=true 
 # jf config show
-jf config use academy
+# jf config use academy
 
 # Config - Artifactory info
-export JF_HOST="academy-artifactory" JFROG_RT_USER="admin" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
-export JF_RT_URL="http://${JF_HOST}"
+#export JF_HOST="academy-artifactory" JFROG_RT_USER="admin" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
+# export JF_RT_URL="http://${JF_HOST}"
+
+export JF_HOST="psazuse.jfrog.io" JFROG_RT_USER="krishnam" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
+export JF_RT_URL="https://${JF_HOST}"
 
 export RT_REPO_VIRTUAL="jftd114-mvn-virtual" RT_REPO_DEV_LOCAL="jftd114-mvn-dev-local" RT_REPO_PROD_LOCAL="jftd114-mvn-prod-local"
 export VAR_RBv2_SPEC_JSON="RBv2-SPEC.json" RBv2_SIGNING_KEY="jftd114-rbv2_key"
@@ -21,7 +24,7 @@ jf rt ping --url=${JF_RT_URL}/artifactory
 # set -x # activate debugging from here
 ## Config - project
 ### CLI
-export BUILD_NAME="spring-petclinic" BUILD_ID="$(date '+%Y-%m-%d-%H-%M')" 
+export BUILD_NAME="jftd114-lab3" BUILD_ID="$(date '+%Y-%m-%d-%H-%M')" 
 
 jf mvnc --global --repo-resolve-releases ${RT_REPO_VIRTUAL} --repo-resolve-snapshots ${RT_REPO_VIRTUAL} --repo-deploy-releases ${RT_REPO_VIRTUAL} --repo-deploy-snapshots ${RT_REPO_VIRTUAL}
 
@@ -36,7 +39,7 @@ jf rt bag ${BUILD_NAME} ${BUILD_ID}
 jf rt bp ${BUILD_NAME} ${BUILD_ID} --detailed-summary
 
 # Xray indexing
-jf xr curl "/api/v1/binMgr/builds" -H 'Content-Type: application/json' -d '{"names": ["${BUILD_NAME}"] }'
+jf xr curl "/api/v1/binMgr/builds" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
 
 # Evidence: Build Publish
 printf '{ "session": "SwampUp JFTD114", "build_name": "${BUILD_NAME}", "build_id": "${BUILD_ID}", "evd": "Evidence-BuildPublish"}' > ./${VAR_EVD_SPEC_JSON}

@@ -60,14 +60,14 @@ EOF
 
 # DELETE RBv2 key if already exists 
 # jf rt curl -s -XDELETE "/api/security/keypair/jftd114-rbv2_key" -H 'Content-Type: application/json'
-jf rt curl -s -XDELETE "/api/security/keypair/$KEY_NAME_RBv2" -H 'Content-Type: application/json'
+jf rt curl -XDELETE "/api/security/keypair/$KEY_NAME_RBv2" -H 'Content-Type: application/json'
 
 # Upload Key via API https://jfrog.com/help/r/jfrog-rest-apis/create-key-pair 
 echo "Uploading GPG key pair to Artifactory..."
-jf rt curl -s -v -XPOST "/api/security/keypair" -H 'Content-Type: application/json' --data-binary @"$JSON_FILE_PATH"
+jf rt curl -v -XPOST "/api/security/keypair" -H 'Content-Type: application/json' --data-binary @"$JSON_FILE_PATH"
 echo "Key $KEY_NAME_RBv2 uploaded successfully."
 # GET Key to verify https://jfrog.com/help/r/jfrog-rest-apis/get-key-pair
-jf rt curl -s -XGET "/api/security/keypair/$KEY_NAME_RBv2" -H 'Content-Type: application/json'
+jf rt curl -XGET "/api/security/keypair/$KEY_NAME_RBv2" -H 'Content-Type: application/json'
 
 # Evidence Signing Key. ref https://jfrog.com/help/r/jfrog-artifactory-documentation/evidence-setup
 printf "\n ========== Generating GPG key pair for Evidence signing ========== \n" 
@@ -89,14 +89,14 @@ EOF
 
 # DELETE Evidence key if already exists 
 # jf rt curl -s -XDELETE "/api/security/keypair/jftd114-evd_key" -H 'Content-Type: application/json'
-jf rt curl -s -XDELETE "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: application/json'
+jf rt curl -XDELETE "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: application/json'
 
 # Upload Key via API https://jfrog.com/help/r/jfrog-rest-apis/create-key-pair 
 echo "Uploading RSA key pair to Artifactory..."
-jf rt curl -s -XPOST "/api/security/keypair" -H 'Content-Type: application/json' --data-binary @"$JSON_FILE_PATH"
+jf rt curl -XPOST "/api/security/keypair" -H 'Content-Type: application/json' --data-binary @"$JSON_FILE_PATH"
 echo "Key $KEY_NAME_EVD uploaded successfully."
 # GET Key to verify https://jfrog.com/help/r/jfrog-rest-apis/get-key-pair
-jf rt curl -s -XGET "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: application/json'
+jf rt curl -XGET "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: application/json'
 
 
 # cleanup files

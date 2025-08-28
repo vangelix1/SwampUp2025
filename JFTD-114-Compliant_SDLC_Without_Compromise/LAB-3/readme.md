@@ -88,6 +88,23 @@ jf rbp ${BUILD_NAME} ${BUILD_ID} PROD ...
 jf evd create --release-bundle ${BUILD_NAME} ...
 ```
 
+## Test JAR
+
+### Start service
+```
+java -jar target/jftd114-lab3.jar --server.port=7080 & 
+```
+
+### Validate service
+```
+curl http://localhost:7080/?name=Krishna
+```
+
+### Kill service
+```
+kill $(lsof -t -i :7080) &
+```
+
 ## Conclusion
 Excellent work! You have successfully executed a secure software supply chain pipeline.
 
@@ -99,3 +116,4 @@ In this lab, you have seen how JFrog CLI can automate the process of building, s
 - Evidence keys# https://jfrog.com/help/r/jfrog-artifactory-documentation/evidence-setup
     - Administration >> Keys Managment >> Public Keys
 - JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration#running-maven-builds
+- Java source code generated using https://start.spring.io
