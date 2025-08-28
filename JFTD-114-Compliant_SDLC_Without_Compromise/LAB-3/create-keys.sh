@@ -103,3 +103,5 @@ jf rt curl -XGET "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: applica
 printf "\n\n**** CLEAN UP ****\n\n"
 rm -f ./keydetails
 # rm -f *.pem
+
+ls -lrt *.pem

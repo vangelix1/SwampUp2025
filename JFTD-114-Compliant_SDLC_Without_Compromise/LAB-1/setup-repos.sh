@@ -7,7 +7,7 @@ export JFROG_CLI_LOG_LEVEL="DEBUG"
 
 setup(){ 
     printf "\n ------------------------------------------------------------  "
-    printf "\n ----------------   REPO Setup for all LABs  ----------------  "
+    printf "\n  ----------------    REPO Setup for LAB-1  ----------------  "
     printf "\n ------------------------------------------------------------  \n"
     create-remote-repos
     create-local-repos
