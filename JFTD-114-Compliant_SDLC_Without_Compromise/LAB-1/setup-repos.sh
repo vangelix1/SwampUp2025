@@ -1,7 +1,7 @@
 #!/bin/bash
-#jf config add swampup --url='https://swampupsaasnew.jfrog.io' --user='jftd114-user-01' --password=Admin1234! --interactive=false --overwrite=true 
+# jf config add academy --url='http://academy-artifactory' --user='admin' --password='Admin1234!' --interactive=false --overwrite=true 
 # jf config show
-jf rt ping
+# jf config use academy
 
 export JFROG_CLI_LOG_LEVEL="DEBUG" 
 
@@ -16,7 +16,7 @@ setup(){
 create-remote-repos(){
     # Create new REMOTE repo and refer https://jfrog.com/help/r/jfrog-rest-apis/create-multiple-repositories
     printf "\n\n 1. Creating REMOTE repositories \n"
-    reposData="[ { \"key\": \"jftd114-pypi-remote\", \"packageType\": \"pypi\", \"rclass\": \"remote\", \"url\": \"https://files.pythonhosted.org\"} ]"
+    reposData="[ { \"key\": \"jftd114-pypi-remote\", \"packageType\": \"pypi\", \"rclass\": \"remote\", \"url\": \"https://files.pythonhosted.org\"}, { \"key\": \"jftd114-npm-remote\", \"packageType\": \"npm\", \"rclass\": \"remote\", \"url\": \"https://registry.npmjs.org/\"}, { \"key\": \"jftd114-mvn-remote\", \"packageType\": \"maven\", \"rclass\": \"remote\", \"url\": \"https://repo1.maven.org/maven2/\"} ]"
 
     repoResponse=$(jf rt curl -XPUT /api/v2/repositories/batch --header 'Content-Type: application/json' --data "$reposData")
     printf "Remote Repositories created:\n $repoResponse \n\n"

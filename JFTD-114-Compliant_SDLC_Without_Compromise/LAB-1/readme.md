@@ -7,7 +7,9 @@ This lab walks you through configuring and using JFrog Curation to block unwante
 - JFrog Platform Access: You'll need the URL and login credentials for your JFrog instance.
 - `jq` The command-line JSON processor must be installed.
 - Lab Files: You should have the lab scripts checked out locally.
-
+- JFrog Platform UI credentials
+    - username: ``` admin ```
+    - Password: ``` Admin1234! ```
 ## Setup and Configuration
 First, let's set up the necessary repositories using a script.
 
@@ -23,10 +25,27 @@ Run the setup script to automatically create three remote repositories (for Mave
     ./setup-repos.sh
 ````
 This script will create the remote, local, and virtual repositories needed for the lab.
-<img src="./images/repos-created.png" /> <br/>
+<img src="./images/lab1-repos-0.png" /> <br/>
+<img src="./images/lab1-repos-1.png" /> <br/>
 
 ## Curation Policy Setup
 Now, let's configure the curation policy in the JFrog Platform UI.
+
+### Enable Curation
+- Next, you need to enable the Curation service for the repositories.
+- Navigate to **Administration** >> **Curation Settings**.
+- Toggle the switch to **Enable Curation**.
+
+<img src="./images/lab1-curation-1.png" /><br/>
+
+- Next, click on to enable Enable repositories
+
+<img src="./images/lab1-curation-2.png" /><br/>
+
+- From the list of repositories, toggle the remote repositories you created with the `setup-repos.sh` script to enable curation on them.
+
+<img src="./images/lab1-curation-3.png" /><br/>
+
 
 ### Create a Labels
 Labels are used to tag packages, and we'll use one to identify packages that are approved for use.
@@ -48,17 +67,6 @@ Labels are used to tag packages, and we'll use one to identify packages that are
 
 - Click **Save Label**.
 
-
-### Enable Curation
-- Next, you need to enable the Curation service for the repositories.
-- Navigate to **Administration** >> **Curation Settings**.
-- Toggle the switch to **Enable Curation**.
-
-<img src="./images/curation-enablement.png" /><br/>
-
-- From the list of repositories, toggle the remote repositories you created with the `setup-repos.sh` script to enable curation on them.
-
-<img src="./images/curation-enable-desired-repos.png" /><br/>
 
 
 ### Create a Curation Condition
@@ -140,3 +148,4 @@ After approval, the developer can successfully resolve and download the dependen
 
 ## References
 - JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration#building-python-packages
+- Curation supported technologies: https://jfrog.com/help/r/jfrog-security-user-guide/products/curation/supported-technologies

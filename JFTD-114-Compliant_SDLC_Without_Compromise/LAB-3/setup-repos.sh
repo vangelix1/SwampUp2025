@@ -10,14 +10,14 @@ setup(){
     printf "\n ------------------------------------------------------------  "
     printf "\n  ----------------    REPO Setup for LAB-3  ----------------  "
     printf "\n ------------------------------------------------------------  \n"
-    create-remote-repos
+    # create-remote-repos
     create-local-repos
     create-virtual-repos
 }
 create-remote-repos(){
     # Create new REMOTE repo and refer https://jfrog.com/help/r/jfrog-rest-apis/create-multiple-repositories
     printf "\n\n 1. Creating REMOTE repositories \n"
-    reposData="[ { \"key\": \"jftd114-mvn-remote\", \"packageType\": \"maven\", \"rclass\": \"remote\", \"url\": \"https://repo1.maven.org/maven2/\"}  ]"
+    reposData="[ { \"key\": \"jftd114-mvn-remote\", \"packageType\": \"maven\", \"rclass\": \"remote\", \"url\": \"https://repo1.maven.org/maven2/\"} ]"
 
     repoResponse=$(jf rt curl -XPUT /api/v2/repositories/batch --header 'Content-Type: application/json' --data "$reposData")
     printf "Remote Repositories created:\n $repoResponse \n\n"

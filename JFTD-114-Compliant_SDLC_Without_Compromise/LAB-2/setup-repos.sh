@@ -1,6 +1,7 @@
 #!/bin/bash
-#jf config add swampup --url='https://swampupsaasnew.jfrog.io' --user='jftd114-user-01' --password=Admin1234! --interactive=false --overwrite=true 
+# jf config add academy --url='http://academy-artifactory' --user='admin' --password='Admin1234!' --interactive=false --overwrite=true 
 # jf config show
+# jf config use academy
 jf rt ping
 
 export JFROG_CLI_LOG_LEVEL="DEBUG" 
@@ -10,7 +11,7 @@ setup(){
     printf "\n ------------------------------------------------------------  "
     printf "\n  ----------------    REPO Setup for LAB-2  ----------------  "
     printf "\n ------------------------------------------------------------  \n"
-    create-remote-repos
+    # create-remote-repos
     create-local-repos
     create-virtual-repos
 }
