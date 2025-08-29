@@ -10,10 +10,8 @@ export GRADLE_HOME="/usr/share/gradle"
 export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$GRADLE_HOME/bin:$PATH
 
 # Config - Artifactory info
-# export JF_HOST="academy-artifactory" JFROG_RT_USER="admin" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
-# export JF_RT_URL="http://${JF_HOST}"
-export JF_HOST="psazuse.jfrog.io" JFROG_RT_USER="krishnam" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
-export JF_RT_URL="https://${JF_HOST}"
+export JF_HOST="academy-artifactory" JFROG_RT_USER="admin" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
+export JF_RT_URL="http://${JF_HOST}"
 
 export BUILD_NAME="jftd114-lab3" BUILD_ID="$(date '+%Y-%m-%d-%H-%M')" 
 
