@@ -34,8 +34,8 @@ This will create the following repositories:
 <img src="./images/lab3-repo-1.png" /> <br/>
 <img src="./images/lab3-repo-2.png" /> <br/>
 
-### Create GPG and Evidence Signing Keys
-Next, you need to generate GPG keys for signing your release bundles and key pairs for creating signed evidence.
+### Create RBv2 GPG and Evidence Signing Keys
+Next, you need to generate GPG keys for signing your release bundles (RBv2) and key pairs for creating signed evidence.
 
 Run the ```create-keys.sh``` script with a unique key name. This name will be used for both the GPG key and the evidence signing key alias.
 
