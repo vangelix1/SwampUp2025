@@ -73,33 +73,47 @@ jf rt bp ${BUILD_NAME} ${BUILD_ID}
 
 <img src="./images/lab3-bp-3.png" /> <br/>
 
-- Capture Evidence to Build Publish
-- 
+- Capture Evidence for Build Publish: A signed piece of evidence is created and attached to the buiild publish.
+```
+jf evd create --release-bundle ${BUILD_NAME} ...
+```
+
+<img src="./images/lab3-.png" /> <br/>
 
 - Create Release Bundle v2: A secure, immutable release bundle is created from the build and signed with your GPG key.
 ```
 jf rbc ${BUILD_NAME} ${BUILD_ID} --signing-key="${RBv2_SIGNING_KEY}"
 ```
+<img src="./images/lab3-.png" /> <br/>
+
 
 - Promote to DEV: The release bundle is promoted to the "DEV" environment, moving the artifacts to the jftd114-mvn-dev-local repository.
 ```
 jf rbp ${BUILD_NAME} ${BUILD_ID} DEV ...
 ```
 
+<img src="./images/lab3-.png" /> <br/>
+
 - Capture Evidence for DEV: A signed piece of evidence is created and attached to the release bundle, attesting to its successful promotion to DEV.
 ```
 jf evd create --release-bundle ${BUILD_NAME} ...
 ```
+
+<img src="./images/lab3-.png" /> <br/>
 
 - Promote to PROD: The release bundle is then promoted from DEV to the "PROD" environment.
 ```
 jf rbp ${BUILD_NAME} ${BUILD_ID} PROD ...
 ```
 
+<img src="./images/lab3-.png" /> <br/>
+
 - Capture Evidence for PROD: A final piece of signed evidence is created for the promotion to the PROD environment.
 ```
 jf evd create --release-bundle ${BUILD_NAME} ...
 ```
+
+<img src="./images/lab3-.png" /> <br/>
 
 ## Test JAR
 
@@ -112,6 +126,8 @@ java -jar target/jftd114-lab3.jar --server.port=7080 &
 ```
 curl http://localhost:7080/?name=Krishna
 ```
+
+<img src="./images/lab3-.png" /> <br/>
 
 ### Kill service
 ```
