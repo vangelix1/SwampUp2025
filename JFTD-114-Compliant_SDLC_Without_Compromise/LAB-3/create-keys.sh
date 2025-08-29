@@ -73,6 +73,7 @@ jf rt curl -XGET "/api/security/keypair/$KEY_NAME_RBv2" -H 'Content-Type: applic
 printf "\n ========== Generating GPG key pair for Evidence signing ========== \n" 
 openssl genrsa -out evd_private.pem 2048
 openssl rsa -in evd_private.pem -pubout -out evd_public.pem
+chmod 700 *.pem
 
 EVD_KEY_PRIVATE="$(cat evd_private.pem)" EVD_KEY_PUBLIC="$(cat evd_public.pem)" KEY_NAME_EVD="jftd114-evd_key" 
 
@@ -98,10 +99,12 @@ echo "Key $KEY_NAME_EVD uploaded successfully."
 # GET Key to verify https://jfrog.com/help/r/jfrog-rest-apis/get-key-pair
 jf rt curl -XGET "/api/security/keypair/$KEY_NAME_EVD" -H 'Content-Type: application/json'
 
-
 # cleanup files
-printf "\n\n**** CLEAN UP ****\n\n"
 rm -f ./keydetails
 # rm -f *.pem
 
+printf "\n\n**** Verify .Pem & list ****\n\n"
+# Verify private key
+openssl rsa -inform PEM -in ./evd_private.pem -check
+openssl rsa -in ./evd_private.pem -text -noout
 ls -lrt *.pem

@@ -12,3 +12,5 @@ JFTD-114*/admin/*
 /JFTD-114*/LAB-3/java-app/target/*
 .DS_Store
 **/.DS_Store
+/JFTD-114*/**/.gradle
+/JFTD-114*/LAB-3/.gradle

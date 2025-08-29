@@ -17,7 +17,8 @@ export BUILD_NAME="jftd114-lab3" BUILD_ID="$(date '+%Y-%m-%d-%H-%M')"
 
 export RT_REPO_VIRTUAL="jftd114-mvn-virtual" RT_REPO_DEV_LOCAL="jftd114-mvn-dev-local" RT_REPO_PROD_LOCAL="jftd114-mvn-prod-local"
 export VAR_RBv2_SPEC_JSON="RBv2-SPEC.json" RBv2_SIGNING_KEY="jftd114-rbv2_key"
-export EVD_KEY_PRIVATE="$(cat ../evd_private.pem)" EVD_KEY_PUBLIC="$(cat ../evd_public.pem)" EVD_KEY_ALIAS="jftd114-evd_key" 
+export VAR_EVD_SPEC_JSON="EVD-SPEC.json" EVD_KEY_PRIVATE="$(cat ../evd_private.pem)" EVD_KEY_ALIAS="jftd114-evd_key" # EVD_KEY_PUBLIC="$(cat ../evd_public.pem)"  
+## openssl rsa -inform PEM -in ../evd_private.pem -check
 
 printf "JF_RT_URL: $JF_RT_URL \n JFROG_RT_USER: $JFROG_RT_USER \n JFROG_CLI_LOG_LEVEL: $JFROG_CLI_LOG_LEVEL \n "
 
@@ -39,8 +40,9 @@ jf rt bp ${BUILD_NAME} ${BUILD_ID} --detailed-summary
 # jf xr curl "/api/v1/binMgr/builds" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
 
 # Evidence: Build Publish
-echo '{ "session": "SwampUp JFTD114", "build_name": "${{env.BUILD_NAME}}", "build_id": "${{env.BUILD_ID}}", "evd": "Evidence-BuildPublish" }' > ./${VAR_EVD_SPEC_JSON}
-jf evd create --build-name ${BUILD_NAME} --build-number ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}}" --key-alias ${EVD_KEY_ALIAS}
+printf "\n\n**** Evidence: Build Publish ****\n\n"
+echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-BuildPublish\" }" > ./${VAR_EVD_SPEC_JSON}
+jf evd create --build-name ${BUILD_NAME} --build-number ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
 
 # jf bs ${BUILD_NAME} ${BUILD_ID} --fail=false --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false
@@ -54,20 +56,22 @@ jf rbc ${BUILD_NAME} ${BUILD_ID} --signing-key="${RBv2_SIGNING_KEY}" --spec="${V
 
 ## RBv2: release bundle - DEV promote
 printf "\n\n**** RBv2: Promoted to NEW --> DEV ****\n\n"
-jf rbp ${BUILD_NAME} ${BUILD_ID} DEV --include-repos="${RT_REPO_DEV_LOCAL}" --sync=true --signing-key=${{secrets.RBV2_SIGNING_KEY}}  
+jf rbp ${BUILD_NAME} ${BUILD_ID} DEV --include-repos="${RT_REPO_DEV_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY}  
 
 # EVD: Release Bundle stage DEV
-echo '{ "session": "SwampUp JFTD114", "build_name": "${{env.BUILD_NAME}}", "build_id": "${{env.BUILD_ID}}", "evd": "Evidence-RBv2", "rbv2_stage": "DEV", "unittests": "100/100" }' > ./${VAR_EVD_SPEC_JSON}
-jf evd create --release-bundle ${BUILD_NAME} --release-bundle-version ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}}" --key-alias ${EVD_KEY_ALIAS}
+printf "\n\n**** Evidence: RBv2 stage DEV ****\n\n"
+echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-RBv2\", \"rbv2_stage\": \"DEV\", \"unittests\": \"100/100\" }" > ./${VAR_EVD_SPEC_JSON}
+jf evd create --release-bundle ${BUILD_NAME} --release-bundle-version ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
 
 ## RBv2: release bundle - PROD promote
 printf "\n\n**** RBv2: Promoted to DEV --> PROD ****\n\n"
-jf rbp ${BUILD_NAME} ${BUILD_ID} PROD --include-repos="${RT_REPO_PROD_LOCAL}" --sync=true --signing-key=${{secrets.RBV2_SIGNING_KEY}}  
+jf rbp ${BUILD_NAME} ${BUILD_ID} PROD --include-repos="${RT_REPO_PROD_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY}  
 
 # EVD: Release Bundle stage PROD
-echo '{ "session": "SwampUp JFTD114", "build_name": "${{env.BUILD_NAME}}", "build_id": "${{env.BUILD_ID}}", "evd": "Evidence-RBv2", "rbv2_stage": "PROD", "prodtests": "100/100" }' > ./${VAR_EVD_SPEC_JSON}
-jf evd create --release-bundle ${BUILD_NAME} --release-bundle-version ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}}" --key-alias ${EVD_KEY_ALIAS}
+printf "\n\n**** Evidence: RBv2 stage PROD ****\n\n"
+echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-RBv2\", \"rbv2_stage\": \"PROD\", \"prodtests\": \"100/100\" }"\ > ./${VAR_EVD_SPEC_JSON}
+jf evd create --release-bundle ${BUILD_NAME} --release-bundle-version ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
 
 sleep 3

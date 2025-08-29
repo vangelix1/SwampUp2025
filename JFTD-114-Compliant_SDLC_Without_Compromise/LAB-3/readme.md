@@ -60,6 +60,8 @@ jf mvn clean install ...
 
 <img src="./images/lab3-mvn-0.png" /> <br/>
 
+<img src="./images/lab3-mvn-1.png" /> <br/>
+
 - Publish Build Info: The collected build information, which includes the SBOM, is published to Artifactory.
 ```
 jf rt bp ${BUILD_NAME} ${BUILD_ID}
@@ -73,18 +75,20 @@ jf rt bp ${BUILD_NAME} ${BUILD_ID}
 
 <img src="./images/lab3-bp-3.png" /> <br/>
 
+<img src="./images/lab3-bp-4.png" /> <br/>
+
 - Capture Evidence for Build Publish: A signed piece of evidence is created and attached to the buiild publish.
 ```
 jf evd create --release-bundle ${BUILD_NAME} ...
 ```
 
-<img src="./images/lab3-.png" /> <br/>
+<img src="./images/lab3-bp-evd.png" /> <br/>
 
 - Create Release Bundle v2: A secure, immutable release bundle is created from the build and signed with your GPG key.
 ```
 jf rbc ${BUILD_NAME} ${BUILD_ID} --signing-key="${RBv2_SIGNING_KEY}"
 ```
-<img src="./images/lab3-.png" /> <br/>
+<img src="./images/lab3-rbc-0.png" /> <br/>
 
 
 - Promote to DEV: The release bundle is promoted to the "DEV" environment, moving the artifacts to the jftd114-mvn-dev-local repository.
@@ -92,28 +96,32 @@ jf rbc ${BUILD_NAME} ${BUILD_ID} --signing-key="${RBv2_SIGNING_KEY}"
 jf rbp ${BUILD_NAME} ${BUILD_ID} DEV ...
 ```
 
-<img src="./images/lab3-.png" /> <br/>
+<img src="./images/lab3-rbp-dev-0.png" /> <br/>
+
+<img src="./images/lab3-rbp-dev-1.png" /> <br/>
 
 - Capture Evidence for DEV: A signed piece of evidence is created and attached to the release bundle, attesting to its successful promotion to DEV.
 ```
 jf evd create --release-bundle ${BUILD_NAME} ...
 ```
 
-<img src="./images/lab3-.png" /> <br/>
+<img src="./images/lab3-rbp-dev-2.png" /> <br/>
 
 - Promote to PROD: The release bundle is then promoted from DEV to the "PROD" environment.
 ```
 jf rbp ${BUILD_NAME} ${BUILD_ID} PROD ...
 ```
 
-<img src="./images/lab3-.png" /> <br/>
+<img src="./images/lab3-rbp-prod-0.png" /> <br/>
+<img src="./images/lab3-rbp-prod-1.png" /> <br/>
 
 - Capture Evidence for PROD: A final piece of signed evidence is created for the promotion to the PROD environment.
 ```
 jf evd create --release-bundle ${BUILD_NAME} ...
 ```
 
-<img src="./images/lab3-.png" /> <br/>
+<img src="./images/lab3-rbp-prod-2.png" /> <br/>
+
 
 ## Test JAR
 
@@ -121,23 +129,26 @@ jf evd create --release-bundle ${BUILD_NAME} ...
 ```
 java -jar target/jftd114-lab3.jar --server.port=7080 & 
 ```
+<img src="./images/lab3-test-1.png" /> <br/>
 
 ### Validate service
 ```
-curl http://localhost:7080/?name=Krishna
+curl -w "\n" http://localhost:7080/?name=Krishna
 ```
 
-<img src="./images/lab3-.png" /> <br/>
+<img src="./images/lab3-test-1.png" /> <br/>
 
 ### Kill service
 ```
 kill $(lsof -t -i :7080) &
 ```
+<img src="./images/lab3-test-3.png" /> <br/>
 
 ## Conclusion
 Excellent work! You have successfully executed a secure software supply chain pipeline.
 
 In this lab, you have seen how JFrog CLI can automate the process of building, securing, and promoting software releases. By creating signed release bundles and capturing evidence at each stage, you can build a verifiable and tamper-proof audit trail for your software releases, ensuring a compliant and secure SDLC.
+
 
 ## References
 - RBv2 keys# https://jfrog.com/help/r/jfrog-artifactory-documentation/create-signing-keys-for-release-bundles-v2
