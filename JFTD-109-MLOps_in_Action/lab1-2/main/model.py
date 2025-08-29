@@ -1,5 +1,7 @@
 import platform
 import torch
+import pandas as pd
+from pandas import DataFrame
 import frogml
 from frogml import FrogMlModel
 from frogml.sdk.model.adapters import DataFrameInputAdapter, JsonOutputAdapter, JsonInputAdapter
@@ -197,11 +199,12 @@ class LLMFineTuner(FrogMlModel):
         return ModelSchema(inputs=[ExplicitFeature(name="prompt", type=str)])
 
     @frogml.api(input_adapter=JsonInputAdapter(), output_adapter=JsonOutputAdapter())
-    def predict(self, json_objects):
+    def predict(self, df):
         """
         The main inference method. It takes a list of JSON objects and returns predictions.
         """
-        prompts = [data['prompt'] for data in json_objects]
+        prompts = list(df['prompt'].values)
+        #prompts = [data['prompt'] for data in json_objects]
         formatted_prompts = [config.get_prompt(p) for p in prompts]
 
         outputs = self.generator(
@@ -212,5 +215,5 @@ class LLMFineTuner(FrogMlModel):
             top_k=50,
             top_p=0.95,
         )
-        
-        return [output[0]['generated_text'] for output in outputs]
+        decoded_outputs = [output[0]['generated_text'] for output in outputs]
+        return pd.DataFrame([{"generated_text": decoded_outputs}])
