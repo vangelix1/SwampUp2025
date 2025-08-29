@@ -136,7 +136,7 @@ java -jar target/jftd114-lab3.jar --server.port=7080 &
 curl -w "\n" http://localhost:7080/?name=Krishna
 ```
 
-<img src="./images/lab3-test-1.png" /> <br/>
+<img src="./images/lab3-test-2.png" /> <br/>
 
 ### Kill service
 ```
