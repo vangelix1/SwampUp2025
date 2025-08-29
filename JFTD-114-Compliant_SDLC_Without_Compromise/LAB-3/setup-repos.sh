@@ -10,7 +10,7 @@ setup(){
     printf "\n ------------------------------------------------------------  "
     printf "\n  ----------------    REPO Setup for LAB-3  ----------------  "
     printf "\n ------------------------------------------------------------  \n"
-    # create-remote-repos
+    create-remote-repos
     create-local-repos
     create-virtual-repos
 }
