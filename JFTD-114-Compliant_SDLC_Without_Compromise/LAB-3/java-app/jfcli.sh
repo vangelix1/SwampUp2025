@@ -4,13 +4,16 @@ clear
 # jf config show
 # jf config use academy
 
-export JAVA_HOME="usr/lib/jvm/java-21-openjdk-amd64"
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64" # "usr/lib/jvm/java-21-openjdk-amd64"
 export M2_HOME="/usr/share/maven"
-export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
+export GRADLE_HOME="/usr/share/gradle"
+export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$GRADLE_HOME/bin:$PATH
 
 # Config - Artifactory info
-export JF_HOST="academy-artifactory" JFROG_RT_USER="admin" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
-export JF_RT_URL="http://${JF_HOST}"
+# export JF_HOST="academy-artifactory" JFROG_RT_USER="admin" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
+# export JF_RT_URL="http://${JF_HOST}"
+export JF_HOST="psazuse.jfrog.io" JFROG_RT_USER="krishnam" JFROG_CLI_LOG_LEVEL="DEBUG" # JF_ACCESS_TOKEN="<GET_YOUR_OWN_KEY>"
+export JF_RT_URL="https://${JF_HOST}"
 
 export BUILD_NAME="jftd114-lab3" BUILD_ID="$(date '+%Y-%m-%d-%H-%M')" 
 
@@ -35,13 +38,13 @@ jf rt bag ${BUILD_NAME} ${BUILD_ID}
 jf rt bp ${BUILD_NAME} ${BUILD_ID} --detailed-summary
 
 # Xray indexing
-jf xr curl "/api/v1/binMgr/builds" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
+# jf xr curl "/api/v1/binMgr/builds" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
 
 # Evidence: Build Publish
 printf '{ "session": "SwampUp JFTD114", "build_name": "${BUILD_NAME}", "build_id": "${BUILD_ID}", "evd": "Evidence-BuildPublish"}' > ./${VAR_EVD_SPEC_JSON}
 jf evd create --build-name ${BUILD_NAME} --build-number ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias "${EVD_KEY_ALIAS}"
 
-jf bs ${BUILD_NAME} ${BUILD_ID} --fail=false --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false
+# jf bs ${BUILD_NAME} ${BUILD_ID} --fail=false --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false
 
 ## RBv2: release bundle - create   ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory/release-lifecycle-management
 printf "\n\n**** RBv2: Create ****\n\n"

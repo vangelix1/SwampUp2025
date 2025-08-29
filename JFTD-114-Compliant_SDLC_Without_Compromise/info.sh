@@ -17,7 +17,7 @@ printf " Git Version: $(git -v) \n"
 printf " Java Version: $(java -version 2>&1 | head -n 1) \n"
 # apt install maven
 printf " Maven Version: $(mvn -v | head -n 1) \n"
-# printf " Gradle Version: $(gradle -v | grep 'Gradle ' | head -n 1) \n"
+printf " Gradle Version: $(gradle -v | grep 'Gradle ' | head -n 1) \n"
 printf " Node Version: $(node -v) \n"
 printf " NPM Version: $(npm -v) \n"
 printf " Python Version: $(python -V 2>&1) \n"

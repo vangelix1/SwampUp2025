@@ -1,5 +1,5 @@
 #!/bin/bash
-#jf config add swampup --url='https://swampupsaasnew.jfrog.io' --user='jftd114-user-01' --password=Admin1234! --interactive=false --overwrite=true 
+# jf config add academy --url='http://academy-artifactory' --user='admin' --password='Admin1234!' --interactive=false --overwrite=true 
 # jf config show
 jf rt ping
 

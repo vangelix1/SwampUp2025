@@ -58,10 +58,23 @@ This script will perform the following sequence of actions:
 jf mvn clean install ...
 ```
 
+<img src="./images/lab3-mvn-0.png" /> <br/>
+
 - Publish Build Info: The collected build information, which includes the SBOM, is published to Artifactory.
 ```
 jf rt bp ${BUILD_NAME} ${BUILD_ID}
 ```
+
+<img src="./images/lab3-bp-0.png" /> <br/>
+
+<img src="./images/lab3-bp-1.png" /> <br/>
+
+<img src="./images/lab3-bp-2.png" /> <br/>
+
+<img src="./images/lab3-bp-3.png" /> <br/>
+
+- Capture Evidence to Build Publish
+- 
 
 - Create Release Bundle v2: A secure, immutable release bundle is created from the build and signed with your GPG key.
 ```
