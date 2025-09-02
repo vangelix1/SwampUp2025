@@ -157,3 +157,8 @@ In this lab, you have seen how JFrog CLI can automate the process of building, s
     - Administration >> Keys Managment >> Public Keys
 - JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration#running-maven-builds
 - Java source code generated using https://start.spring.io
+- Artifactory
+    - Rest APIs: https://jfrog.com/help/r/jfrog-rest-apis/artifactory-rest-apis
+- Xray
+    - Rest APIs: https://jfrog.com/help/r/xray-rest-apis
+    - https://jfrog.com/help/r/jfrog-security-user-guide/products/xray

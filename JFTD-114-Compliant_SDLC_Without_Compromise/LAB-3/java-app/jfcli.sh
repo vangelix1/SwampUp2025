@@ -36,16 +36,15 @@ jf rt bce ${BUILD_NAME} ${BUILD_ID}
 jf rt bag ${BUILD_NAME} ${BUILD_ID}
 jf rt bp ${BUILD_NAME} ${BUILD_ID} --detailed-summary
 
-# Xray indexing
-# jf xr curl "/api/v1/binMgr/builds" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
+# Xray indexing - Build ref: https://jfrog.com/help/r/xray-rest-apis/get-builds-indexing-configuration
+jf xr curl "/api/v1/binMgr/builds" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
 
 # Evidence: Build Publish
 printf "\n\n**** Evidence: Build Publish ****\n\n"
 echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-BuildPublish\" }" > ./${VAR_EVD_SPEC_JSON}
 jf evd create --build-name ${BUILD_NAME} --build-number ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
-
-# jf bs ${BUILD_NAME} ${BUILD_ID} --fail=false --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false
+jf bs ${BUILD_NAME} ${BUILD_ID} --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false
 
 ## RBv2: release bundle - create   ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory/release-lifecycle-management
 printf "\n\n**** RBv2: Create ****\n\n"
@@ -53,6 +52,8 @@ printf "\n\n**** RBv2: Create ****\n\n"
 echo "{ \"files\": [ {\"build\": \"${BUILD_NAME}/${BUILD_ID}\", \"includeDeps\": \"true\", \"props\": \"\" } ] }"  > $VAR_RBv2_SPEC_JSON
 jf rbc ${BUILD_NAME} ${BUILD_ID} --signing-key="${RBv2_SIGNING_KEY}" --spec="${VAR_RBv2_SPEC_JSON}" 
 
+# Xray indexing - RBv2 ref: https://jfrog.com/help/r/xray-rest-apis/add-release-bundles-v2-indexing-configuration
+jf xr curl "/api/v1/binMgr/release_bundle_v2" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
 
 ## RBv2: release bundle - DEV promote
 printf "\n\n**** RBv2: Promoted to NEW --> DEV ****\n\n"
