@@ -47,25 +47,6 @@ Now, let's configure the curation policy in the JFrog Platform UI.
 <img src="./images/lab1-curation-3.png" /><br/>
 
 
-### Create a Labels
-Labels are used to tag packages, and we'll use one to identify packages that are approved for use.
-
-- Navigate to **Platform** >> **Catalog** >> **Labels**.
-- Click the **Create New Label** button.
-
-<img src="./images/catalog-labels-newbutton.png" /> <br/>
-
-- Enter the following details:
-    - Label Name: ` ALLOW-THIS `
-    - Description: ` ALLOW PACKAGES  `
-
-- Enter the following details:
-    - Label Name: ` SADMIN-ALLOW `
-    - Description: ` Allowed by Security Admin for Demo purpose only  `
-
-<img src="./images/catalog-labels-list.png" /> <br/>
-
-- Click **Save Label**.
 
 
 
