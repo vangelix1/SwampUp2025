@@ -20,7 +20,7 @@ cd ~/jfrog/JFTD-114-Compliant_SDLC_Without_Compromise/LAB-1
 ```
 
 ### Create Repositories
-Run the setup script to automatically create three remote repositories (for Maven, PyPI, and NPM) in Artifactory. The script adds a timestamp to the repository names to ensure they are unique.
+Run the setup script to automatically create Gradle repositories in Artifactory. 
 ````
     ./setup-repos.sh
 ````

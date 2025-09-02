@@ -16,7 +16,7 @@ setup(){
 create-remote-repos(){
     # Create new REMOTE repo and refer https://jfrog.com/help/r/jfrog-rest-apis/create-multiple-repositories
     printf "\n\n 1. Creating REMOTE repositories \n"
-    reposData="[ { \"key\": \"jftd114-lab1-mvn-remote\", \"packageType\": \"maven\", \"rclass\": \"remote\", \"url\": \"https://repo1.maven.org/maven2/\", \"xrayIndex\": true} ]"
+    reposData="[ { \"key\": \"jftd114-gradle-remote\", \"packageType\": \"gradle\", \"rclass\": \"remote\", \"url\": \"https://repo1.maven.org/maven2/\", \"xrayIndex\": true} ]"
 
     repoResponse=$(jf rt curl -XPUT /api/v2/repositories/batch --header 'Content-Type: application/json' --data "$reposData")
     printf "Remote Repositories created:\n $repoResponse \n\n"
@@ -24,7 +24,7 @@ create-remote-repos(){
 create-local-repos(){
     # Create new LOCAL repo and refer https://jfrog.com/help/r/jfrog-rest-apis/create-multiple-repositories
     printf "\n\n 2. Creating LOCAL repositories \n"
-    reposData="[ {\"key\": \"jftd114-lab1-snapshot-local\", \"packageType\": \"maven\", \"rclass\": \"local\", \"xrayIndex\": true }  ]"
+    reposData="[ {\"key\": \"jftd114-lab1-local\", \"packageType\": \"gradle\", \"rclass\": \"local\", \"xrayIndex\": true }  ]"
 
     repoResponse=$(jf rt curl -XPUT /api/v2/repositories/batch --header 'Content-Type: application/json' --data "$reposData")
     printf "LOCAL Repositories created:\n $repoResponse \n\n"
@@ -34,7 +34,7 @@ create-virtual-repos(){
     # Create new virtual repos
     printf "\n\n 3. Creating VIRTUAL repositories \n"
 
-    reposData="[ { \"key\": \"jftd114-lab1-virtual\", \"packageType\": \"maven\", \"rclass\": \"virtual\", \"description\": \"The virtual repository public description\", \"defaultDeploymentRepo\": \"jftd114-mvn-snapshot-local\", \"repositories\": [ \"jftd114-mvn-snapshot-local\"], \"xrayIndex\": true }  ]"
+    reposData="[ { \"key\": \"jftd114-lab1-virtual\", \"packageType\": \"gradle\", \"rclass\": \"virtual\", \"description\": \"The virtual repository public description\", \"defaultDeploymentRepo\": \"jftd114-gradle-remote\", \"repositories\": [ \"jftd114-gradle-remote\"], \"xrayIndex\": true }  ]"
 
     repoResponse=$(jf rt curl -XPUT /api/v2/repositories/batch --header 'Content-Type: application/json' --data "$reposData")
     
