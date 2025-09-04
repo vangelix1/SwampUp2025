@@ -12,17 +12,17 @@ JFrog Curation is a powerful tool that allows you to establish automated policie
     - username: ``` admin ```
     - Password: ``` Admin1234! ```
 
-## Setup and Configuration
+## Navigate to the IDE UI
 First, let's set up the necessary repositories using a script.
 
 ### Navigate to the Lab Directory
-Open your terminal or IDE's built-in terminal and change to the lab directory.
+First, let's set up the necessary repositories using a script in the IDE terminal and change to the lab directory.
 ```
 cd ~/jfrog/JFTD-114-Compliant_SDLC_Without_Compromise/LAB-1
 ```
 
 ### Create Repositories
-Run the setup script to automatically create Gradle repositories in Artifactory. 
+Run the setup script to automatically create Gradle repositories in Artifactory.
 ````
     ./setup-repos.sh
 ````
@@ -33,11 +33,11 @@ This script will create the remote, local, and virtual repositories needed for t
 <img src="./images/lab1-repos-3.png" /> <br/>
 
 
-## Curation
+##  JFrog Platform UI - Curation
 
 ### Enabling
 Now, let's enable Curation in the JFrog Platform UI.
-- Navigate to the Administration module, then go to Curation -> General.
+- Navigate to the *Administration* module, then go to **Curation** -> **General**.
 - Toggle the switch to turn Curation On.
 
 <img src="./images/lab1-curation-1.png" /><br/>
@@ -56,6 +56,10 @@ Conditions are the building blocks of Curation policies. Let's create a conditio
 
 - Navigate to **Administration** >> **Curation Settings** and select the Conditions tab.
 - Click **Create Condition.**
+	- Select Custom condition templates: ``` Block specific package version ```
+	- Condition name: ``` block-log4j ```
+	- Select pakcage type: ``` Maven ```
+	- Add package name: ``` org.apache.logging.log4j:log4j-api ```
 
 <img src="./images/lab1-condition-0.png" /><br/> 
 
@@ -68,11 +72,17 @@ Conditions are the building blocks of Curation policies. Let's create a conditio
 Policies apply conditions to specific repositories.
 
 - Navigate to Curation -> Policies and create a new policy.
-- Configure the policy to use the block-log4j condition on your remote repository. Set the action to Block and allow for Manually approved waivers.
+- Configure the policy to use the *block-log4j* condition on your remote *jftd114-lab1-mvn-remote* repository. Set the action to Block and allow for Manually approved waivers.
+	- Policy Name: ``` block-log4j-policy ```
+	- Select Scope as *Select Remote Repositories*: ``` jftd114-lab1-mvn-remote ```
+	- Policy Condition: ``` block-log4j ```
+	- Actions & Notifications: ``` Block ```
+	- Configure the waiver request options for blocked packages: ``` Manually approved ```
+	- Owner Groups: ``` sup_admin ```
 
     <img src="./images/lab1-policy-approve-1.png" /> <br/>
 
-## Developer: Auditing a Requesting a Waiver
+## IDE Terminal - Developer Requesting a Curation Waiver
 The developer uses the `jf ca` command to check if their app dependencies violate any Curation policies before attempting to download them.
 
 ```
@@ -82,23 +92,39 @@ cd java-app
 The output will show that the package is blocked by the 'blocked-log4j-policy' policy. Because the policy is configured to allow manual waivers, the developer is prompted to request one.
 
 - Request the Waiver: The developer follows the interactive prompts in the CLI to select the package and provide a justification for the waiver.
+- Execute the jfcli.sh script from IDE terminal:
+```
+./jfcli.sh
+```
+
+- This script will perform the following sequence of actions:
+- Maven config with virtual repo
+```
+jf mvnc ...
+```
+
+- Curation Audit
+```
+	jf ca  ...
+```
 
 <img src="./images/lab1-policy-approve-2.png" /><br/>
 
 
-## Approver: Reviewing and Approving the Waiver
+## JFrog Platform UI: Reviewing and Approving the Curation Waiver request
 The designated approver (a member of the sup-admin group) manages the request in the JFrog Platform.
 
-- The approver receives a notification and navigates to the waiver management interface to see the pending request.
+- The approver receives a notification and navigates to the waiver management interface (**Platform** >> **Curation**  >> **Waivers Requests**) to see the pending request.
 
 <img src="./images/lab1-policy-approve-3.png" /><br/>
 
 - They can review the package details, the developer's justification, and the policies that are blocking it.
-- Upon approval, the label is automatically applied to the package in the Catalog, making it available for download.
+- Upon approval, the label is automatically applied to the package in the **Platform** >> **Catalog**  >> **Labels**, making it available for download.
  
 <img src="./images/lab1-policy-approve-4.png" /><br/>
 
 After approval, the developer can successfully resolve and download the dependency into their project. 🎉
+- Navigate back to IDE terminal and execute the ``` ./jfcli.sh ``` command
 
 <img src="./images/lab1-policy-approve-5.png" /><br/>
 

@@ -34,7 +34,7 @@ create-virtual-repos(){
     # Create new virtual repos
     printf "\n\n 3. Creating VIRTUAL repositories \n"
 
-    reposData="[ { \"key\": \"jftd114-lab1-virtual\", \"packageType\": \"maven\", \"rclass\": \"virtual\", \"description\": \"The virtual repository public description\", \"defaultDeploymentRepo\": \"jftd114-lab1-mvn-remote\", \"repositories\": [ \"jftd114-lab1-mvn-remote\"], \"xrayIndex\": true }  ]"
+    reposData="[ { \"key\": \"jftd114-lab1-mvn-virtual\", \"packageType\": \"maven\", \"rclass\": \"virtual\", \"description\": \"The virtual repository public description\", \"defaultDeploymentRepo\": \"jftd114-lab1-mvn-local\", \"repositories\": [ \"jftd114-lab1-mvn-local\", \"jftd114-lab1-mvn-remote\"], \"xrayIndex\": true }  ]"
 
     repoResponse=$(jf rt curl -XPUT /api/v2/repositories/batch --header 'Content-Type: application/json' --data "$reposData")
     

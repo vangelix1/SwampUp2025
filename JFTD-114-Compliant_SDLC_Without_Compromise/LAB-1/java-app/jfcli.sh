@@ -15,7 +15,7 @@ export JF_RT_URL="http://${JF_HOST}"
 
 export BUILD_NAME="jftd114-lab1" BUILD_ID="$(date '+%Y-%m-%d-%H-%M')" 
 
-export RT_REPO_VIRTUAL="jftd114-lab1-virtual" 
+export RT_REPO_VIRTUAL="jftd114-lab1-mvn-virtual" 
 
 printf "JF_RT_URL: $JF_RT_URL \n JFROG_RT_USER: $JFROG_RT_USER \n JFROG_CLI_LOG_LEVEL: $JFROG_CLI_LOG_LEVEL \n "
 
@@ -24,3 +24,5 @@ jf mvnc --global --repo-resolve-releases ${RT_REPO_VIRTUAL} --repo-resolve-snaps
 # Curation waiver request
 printf "\n\n**** Curation Waiver Request ****\n\n"
 jf ca --format=table --threads=100
+
+jf mvn clean install --build-name=${BUILD_NAME} --build-number=${BUILD_ID} --detailed-summary=true 
