@@ -1,6 +1,6 @@
 clear
 # TOKEN SETUP
-# jf config add academy --url='http://academy-artifactory' --user='admin' --password='Admin1234!' --interactive=false --overwrite=true 
+# jf config add academy --url='http://academy-artifactory' --user='admin' --interactive=false --overwrite=true 
 # jf config show
 # jf config use academy
 
@@ -49,7 +49,10 @@ printf "\n\n**** Evidence: Build Publish ****\n\n"
 echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-BuildPublish\" }" > ./${VAR_EVD_SPEC_JSON}
 jf evd create --build-name ${BUILD_NAME} --build-number ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
-jf bs ${BUILD_NAME} ${BUILD_ID} --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false
+# jf bs ${BUILD_NAME} ${BUILD_ID} --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false --rescan=false
+
+# Build Scan V2"  # https://jfrog.com/help/r/xray-rest-apis/scan-build-v2
+jf xr curl /api/v2/ci/build -H 'Content-Type: application/json' -d '{"build_name": "${BUILD_NAME}", "build_number": "${BUILD_ID}","rescan":false  }'
 
 ## RBv2: release bundle - create   ref: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/cli-for-jfrog-artifactory/release-lifecycle-management
 printf "\n\n**** RBv2: Create ****\n\n"
@@ -62,7 +65,7 @@ jf xr curl "/api/v1/binMgr/release_bundle_v2" -H 'Content-Type: application/json
 
 ## RBv2: release bundle - DEV promote
 printf "\n\n**** RBv2: Promoted to NEW --> DEV ****\n\n"
-jf rbp ${BUILD_NAME} ${BUILD_ID} DEV --include-repos="${RT_REPO_DEV_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY}  
+jf rbp ${BUILD_NAME} ${BUILD_ID} DEV --include-repos="${RT_REPO_DEV_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY} --promotion-type='move'
 
 # EVD: Release Bundle stage DEV
 printf "\n\n**** Evidence: RBv2 stage DEV ****\n\n"
@@ -72,7 +75,7 @@ jf evd create --release-bundle ${BUILD_NAME} --release-bundle-version ${BUILD_ID
 
 ## RBv2: release bundle - PROD promote
 printf "\n\n**** RBv2: Promoted to DEV --> PROD ****\n\n"
-jf rbp ${BUILD_NAME} ${BUILD_ID} PROD --include-repos="${RT_REPO_PROD_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY}  
+jf rbp ${BUILD_NAME} ${BUILD_ID} PROD --include-repos="${RT_REPO_PROD_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY} --promotion-type='move'
 
 # EVD: Release Bundle stage PROD
 printf "\n\n**** Evidence: RBv2 stage PROD ****\n\n"
