@@ -41,7 +41,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>jftd114-lab1</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
