@@ -52,18 +52,17 @@ Now, let's enable Curation in the JFrog Platform UI.
 
 
 ### Creating a Curation Condition
-Conditions are the building blocks of Curation policies. Let's create a condition to specifically block vulnerable versions of log4j.
+Conditions are the building blocks of Curation policies. Let's create a condition to specifically block **GPL 3.0 license packages**
 
 - Navigate to **Administration** >> **Curation Settings** and select the Conditions tab.
 - Click **Create Condition.**
-	- Select Custom condition templates: ``` Block specific package version ```
-	- Condition name: ``` block-log4j ```
-	- Select pakcage type: ``` Maven ```
-	- Add package name: ``` org.apache.logging.log4j:log4j-api ```
 
 <img src="./images/lab1-condition-0.png" /><br/> 
 
-- Fill in the details to block org.apache.logging.log4j:log4j-api. We will block all versions for this example.
+- On Create Custom Condition from Template,
+    - Select Custom condition templates: ``` Package license in banned license list ```
+    - Condition name: ``` block-license-gpl3orlater ```
+    - Select banned licenses: ``` GPL-3.0-or-later ```
 
 <img src="./images/lab1-condition-1.png" /><br/>
 
@@ -72,15 +71,15 @@ Conditions are the building blocks of Curation policies. Let's create a conditio
 Policies apply conditions to specific repositories.
 
 - Navigate to Curation -> Policies and create a new policy.
-- Configure the policy to use the *block-log4j* condition on your remote *jftd114-lab1-mvn-remote* repository. Set the action to Block and allow for Manually approved waivers.
-	- Policy Name: ``` block-log4j-policy ```
+- Configure the policy to use the ```  block-license-gpl3orlater ```  condition on your remote ``` jftd114-lab1-mvn-remote ```  repository. Set the action to Block and allow for Manually approved waivers.
+	- Policy Name: ``` block-gpl3orlater-policy ```
 	- Select Scope as *Select Remote Repositories*: ``` jftd114-lab1-mvn-remote ```
-	- Policy Condition: ``` block-log4j ```
+	- Policy Condition: ``` block-license-gpl3orlater ```
 	- Actions & Notifications: ``` Block ```
 	- Configure the waiver request options for blocked packages: ``` Manually approved ```
 	- Owner Groups: ``` sup_admin ```
 
-    <img src="./images/lab1-policy-approve-1.png" /> <br/>
+    <img src="./images/lab1-curation-policy-0.png" /> <br/>
 
 ## IDE Terminal - Developer Requesting a Curation Waiver
 The developer uses the `jf ca` command to check if their app dependencies violate any Curation policies before attempting to download them.

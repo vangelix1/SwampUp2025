@@ -18,16 +18,9 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-bom</artifactId>
-			<version>2.25.1</version>
-			<scope>import</scope>
-			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>2.25.1</version>
+			<groupId>org.neo4j.gds</groupId>
+			<artifactId>similarity-algorithms</artifactId>
+			<version>2.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
