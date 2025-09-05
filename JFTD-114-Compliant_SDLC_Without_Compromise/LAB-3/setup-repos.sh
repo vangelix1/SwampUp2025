@@ -46,8 +46,49 @@ create-virtual-repos(){
 }
 
 
+verify(){
+    printf "\n -------------------------------------------------------------  "
+    printf "\n ----------------------  LAB-1: Verify  ----------------------  "
+    printf "\n -------------------------------------------------------------  \n"
+    load-config
+    printf "\n\n 1. Verifying Remote Repositories \n"  # ref: https://jfrog.com/help/r/jfrog-rest-apis/get-repository-configuration-v2
+    mvnStatus=$(jf rt curl -XGET /api/v2/repositories/jftd114-mvn-virtual --head --silent -o /dev/null -w "%{http_code}")
 
-setup
+    if [[ "$mvnStatus" -ne 200 ]]; then
+        printf "Error: Remote Repository jftd114-mvn-virtual not found or inaccessible. Status: $mvnStatus \n"
+        exit 1
+    else
+        printf "Success: Remote Repository jftd114-mvn-virtual is accessible. Status: $mvnStatus \n"
+    fi
+}
+
+
+# Check for 1 argument
+if [ $# -ne 1 ]; then
+  printf "    ./setup-repos.sh <setup | verify> "
+fi
+# -z option with $1, if the first argument is NULL. Set to default
+if  [[ -z "$1" ]] ; then # check for null
+    printf "User action is NULL, setting to default setup"
+    arg='SETUP'
+fi
+
+# -n string - True if the string length is non-zero.
+if [[ -n $arg ]] ; then
+    arg_len=${#arg}
+    # uppercase the argument
+    arg=$(printf ${arg} | tr [a-z] [A-Z] | xargs)
+    printf "User Action: ${arg}, and arg length: ${arg_len}"
+    
+    if [[ ("SETUP" == "${arg}") || ("RUN" == "${arg}") ]] ; then   # start
+       setup
+    elif [[ "VERIFY" == "${arg}" ]] ; then   # Minikube
+        verify 
+    else
+        printf "Error: Invalid argument. Use 'setup | verify"
+        exit 1
+    fi
+fi
 
 
 printf "\n ------------------------------------------------------------  "
