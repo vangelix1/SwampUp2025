@@ -49,7 +49,8 @@ printf "\n\n**** Evidence: Build Publish ****\n\n"
 echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-BuildPublish\" }" > ./${VAR_EVD_SPEC_JSON}
 jf evd create --build-name ${BUILD_NAME} --build-number ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
-# jf bs ${BUILD_NAME} ${BUILD_ID} --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false --rescan=false
+sleep 20
+jf bs ${BUILD_NAME} ${BUILD_ID} --format=table --extended-table=true --insecure-tls=true --vuln=true --fail=false
 
 # Build Scan V2"  # https://jfrog.com/help/r/xray-rest-apis/scan-build-v2
 jf xr curl /api/v2/ci/build -H 'Content-Type: application/json' -d '{"build_name": "${BUILD_NAME}", "build_number": "${BUILD_ID}","rescan":false  }'
@@ -63,16 +64,19 @@ jf rbc ${BUILD_NAME} ${BUILD_ID} --signing-key="${RBv2_SIGNING_KEY}" --spec="${V
 # Xray indexing - RBv2 ref: https://jfrog.com/help/r/xray-rest-apis/add-release-bundles-v2-indexing-configuration
 jf xr curl "/api/v1/binMgr/release_bundle_v2" -H 'Content-Type: application/json' -d "{\"names\": [\"${BUILD_NAME}\"] }"
 
+sleep 20
+
 ## RBv2: release bundle - DEV promote
 printf "\n\n**** RBv2: Promoted to NEW --> DEV ****\n\n"
 jf rbp ${BUILD_NAME} ${BUILD_ID} DEV --include-repos="${RT_REPO_DEV_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY} --promotion-type='move'
 
+sleep 20
 # EVD: Release Bundle stage DEV
 printf "\n\n**** Evidence: RBv2 stage DEV ****\n\n"
 echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-RBv2\", \"rbv2_stage\": \"DEV\", \"unittests\": \"100/100\" }" > ./${VAR_EVD_SPEC_JSON}
 jf evd create --release-bundle ${BUILD_NAME} --release-bundle-version ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
-
+sleep 20
 ## RBv2: release bundle - PROD promote
 printf "\n\n**** RBv2: Promoted to DEV --> PROD ****\n\n"
 jf rbp ${BUILD_NAME} ${BUILD_ID} PROD --include-repos="${RT_REPO_PROD_LOCAL}" --sync=true --signing-key=${RBV2_SIGNING_KEY} --promotion-type='move'
@@ -82,7 +86,7 @@ printf "\n\n**** Evidence: RBv2 stage PROD ****\n\n"
 echo "{ \"session\": \"SwampUp JFTD114\", \"build_name\": \"${BUILD_NAME}\", \"build_id\": \"${BUILD_ID}\", \"evd\": \"Evidence-RBv2\", \"rbv2_stage\": \"PROD\", \"prodtests\": \"100/100\" }"\ > ./${VAR_EVD_SPEC_JSON}
 jf evd create --release-bundle ${BUILD_NAME} --release-bundle-version ${BUILD_ID} --predicate ./${VAR_EVD_SPEC_JSON} --predicate-type https://jfrog.com/evidence/signature/v1 --key "${EVD_KEY_PRIVATE}" --key-alias ${EVD_KEY_ALIAS}
 
-
+sleep 10
 sleep 3
 printf "\n\n**** CLEAN UP ****\n\n"
 rm -rf $VAR_RBv2_SPEC_JSON

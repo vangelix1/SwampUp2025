@@ -150,6 +150,11 @@ Excellent work! You have successfully executed a secure software supply chain pi
 In this lab, you have seen how JFrog CLI can automate the process of building, securing, and promoting software releases. By creating signed release bundles and capturing evidence at each stage, you can build a verifiable and tamper-proof audit trail for your software releases, ensuring a compliant and secure SDLC.
 
 
+## LAB Demo Video
+
+[![Walk through LAB-3 demo](https://img.youtube.com/vi/?/0.jpg)](https://youtu.be/?) 
+
+
 ## References
 - RBv2 keys# https://jfrog.com/help/r/jfrog-artifactory-documentation/create-signing-keys-for-release-bundles-v2
     - Administration >> Keys Managment >> Signing Keys
