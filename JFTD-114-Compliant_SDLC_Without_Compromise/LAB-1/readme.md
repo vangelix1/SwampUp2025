@@ -127,6 +127,11 @@ After approval, the developer can successfully resolve and download the dependen
 
 <img src="./images/lab1-policy-approve-5.png" /><br/>
 
+
+## LAB Demo Video
+
+[![Walk through LAB-1 demo](https://swampup.jfrog.com/wp-content/uploads/2025/02/swampup25-logo.svg)](./lab-1.mp4) 
+
 ## References
 - JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration
 - Curation supported technologies: https://jfrog.com/help/r/jfrog-security-user-guide/products/curation/supported-technologies
