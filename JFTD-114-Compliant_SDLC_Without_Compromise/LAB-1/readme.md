@@ -130,7 +130,7 @@ After approval, the developer can successfully resolve and download the dependen
 
 ## LAB Demo Video
 
-[![Walk through LAB-1 demo](https://swampup.jfrog.com/wp-content/uploads/2025/02/swampup25-logo.svg)](./lab-1.mp4) 
+[![Walk through LAB-1 demo](https://img.youtube.com/vi/tZggXexQ0AI/0.jpg)](https://youtu.be/tZggXexQ0AI) 
 
 ## References
 - JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration
