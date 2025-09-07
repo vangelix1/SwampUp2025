@@ -122,6 +122,8 @@ jf evd create --release-bundle ${BUILD_NAME} ...
 
 <img src="./images/lab3-rbp-prod-2.png" /> <br/>
 
+<img src="./images/lab3-rbp-prod-3.png" /> <br/>
+
 
 ## Test JAR
 
@@ -150,11 +152,6 @@ Excellent work! You have successfully executed a secure software supply chain pi
 In this lab, you have seen how JFrog CLI can automate the process of building, securing, and promoting software releases. By creating signed release bundles and capturing evidence at each stage, you can build a verifiable and tamper-proof audit trail for your software releases, ensuring a compliant and secure SDLC.
 
 
-## LAB Demo Video
-
-[![Walk through LAB-3 demo](https://img.youtube.com/vi/?/0.jpg)](https://youtu.be/?) 
-
-
 ## References
 - RBv2 keys# https://jfrog.com/help/r/jfrog-artifactory-documentation/create-signing-keys-for-release-bundles-v2
     - Administration >> Keys Managment >> Signing Keys
@@ -167,3 +164,4 @@ In this lab, you have seen how JFrog CLI can automate the process of building, s
 - Xray
     - Rest APIs: https://jfrog.com/help/r/xray-rest-apis
     - https://jfrog.com/help/r/jfrog-security-user-guide/products/xray
+- [![Walk through LAB-3 demo](https://img.youtube.com/vi/7rSrEa74eSA/0.jpg)](https://youtu.be/7rSrEa74eSA) 

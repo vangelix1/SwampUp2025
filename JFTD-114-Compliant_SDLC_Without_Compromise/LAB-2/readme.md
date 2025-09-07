@@ -40,11 +40,8 @@ Congratulations! You have successfully scanned a Node.js application for securit
 <br/>
 In this lab, you learned how integrating security scanning directly into your IDE can help you shift security left, enabling you to find and fix issues earlier in the development lifecycle. This proactive approach to security helps reduce risk and ensures that you are building more secure applications.
 
-## LAB Demo Video
-
-[![Walk through LAB-2 demo](https://img.youtube.com/vi/azjnRsV6SYA/0.jpg)](https://youtu.be/azjnRsV6SYA) 
-
 ## References
 - Source code forked from https://github.com/OWASP/NodeGoat
 - JFrog IDE: https://jfrog.com/help/r/jfrog-security-user-guide/shift-left-on-security/ides 
 - JFrog CLI: https://docs.jfrog-applications.jfrog.io/jfrog-applications/jfrog-cli/binaries-management-with-jfrog-artifactory/package-managers-integration#building-npm-packages-using-the-npm-client
+- [![Walk through LAB-2 demo](https://img.youtube.com/vi/azjnRsV6SYA/0.jpg)](https://youtu.be/azjnRsV6SYA) 
