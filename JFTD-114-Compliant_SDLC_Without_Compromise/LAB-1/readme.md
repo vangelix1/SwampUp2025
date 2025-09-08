@@ -1,7 +1,7 @@
 # Lab 1: OSS Filtering using Curated Remote Repo
 Welcome to the SwampUp 2025 hands-on lab for JFrog Curation! This lab will guide you through the process of setting up and using Curation to control the open-source software (OSS) that enters your organization's software supply chain.
 
-JFrog Curation is a powerful tool that allows you to establish automated policies to approve or block OSS packages from public repositories based on security vulnerabilities, license compliance, and other custom conditions. This lab will walk you through a common use case: blocking a vulnerable version of a package (log4j) and then managing a developer's request for an exception.
+JFrog Curation is a powerful tool that allows you to establish automated policies to approve or block OSS packages from public repositories based on security vulnerabilities, license compliance, and other custom conditions. This lab will walk you through a common use case: blocking a package that has GPL license and then managing a developer's request for an exception.
 
 ## Prerequisites
 - Before you start, make sure you have the following ready:
