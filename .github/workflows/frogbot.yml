@@ -1,0 +1,36 @@
+name: "Frogbot Security Scan"
+
+on:
+  pull_request_target:
+    types: [opened, synchronize]   # Scan every new or updated PR
+  push:
+    branches:
+      - main                       # Scan repo on pushes to main
+  schedule:
+    - cron: "0 0 * * *"            # Daily scan at 00:00 GMT
+  workflow_dispatch:               # Allow manual trigger
+
+permissions:
+  pull-requests: write
+  contents: write
+  security-events: write
+  id-token: write                   # ✅ Required for OIDC authentication
+
+jobs:
+  frogbot-scan:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: ["main"]
+    steps:
+      - name: "Checkout Repository"
+        continue-on-error: true
+        uses: actions/checkout@v4
+      - uses: jfrog/frogbot@v2
+
+        with:
+          oidc-provider-name: "jfrog-githuboidc"    # ✅ Use the provider name configured in JFrog
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}        # JFrog Platform URL
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JF_WORKING_DIR: JFTD-110-GitHub_Actions_for_JFrog/helloworld_npm
