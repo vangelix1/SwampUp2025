@@ -1,11 +1,15 @@
 {
     "name": "jftd-110-helloworld-npm-example",
-    "version": "0.0.1",
+    "version": "0.0.2",
+    "main": "server.js",
     "scripts": {
       "start": "node helloworld"
     },
     "dependencies": {
-      "send": "^0.16.2"
+      "send": "^0.16.2",
+      "dotenv": "^16.0.3",
+      "express": "^4.18.2",
+      "jsonwebtoken": "^8.5.1"
     },
     "devDependencies": {
       "debug": "^4.1.1"
