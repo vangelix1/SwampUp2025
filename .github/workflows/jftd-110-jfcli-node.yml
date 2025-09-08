@@ -52,7 +52,14 @@ jobs:
       #     JF_URL: ${{ vars.ARTIFACTORY_URL }}
       #   with:
       #     oidc-provider-name: jfrog-githuboidc
-      
+        - name: "Get Artifactory Access Token and Setup JFrog CLI"
+        uses: jfrog/setup-jfrog-cli@v4
+        id: setup-cli
+        env:
+          JF_URL: ${{ vars.ARTIFACTORY_URL }}   # example: http://academy-artifactory.dzmfffgzzkmf.instruqt.io
+        with:
+          version: latest
+          oidc-provider-name: jfrog-githuboidc
       # End Lab 1.1 #########################################################
 
       # Purpose: This step serves as a validation and debugging step to confirm that
