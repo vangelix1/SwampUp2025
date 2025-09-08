@@ -50,7 +50,7 @@ jobs:
         uses: jfrog/setup-jfrog-cli@v4
         id: setup-cli
         env:
-          JF_URL: ${{vars.ARTIFACTORY_URL}}   # example: http://academy-artifactory.dzmfffgzzkmf.instruqt.io
+          JF_URL: ${{vars.JF_URL}}   # example: http://academy-artifactory.dzmfffgzzkmf.instruqt.io
         with:
           version: latest
           oidc-provider-name: jfrog-githuboidc
