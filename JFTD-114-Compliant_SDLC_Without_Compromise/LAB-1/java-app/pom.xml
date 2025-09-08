@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.neo4j.gds</groupId>
-			<artifactId>similarity-algorithms</artifactId>
+			<artifactId>config-api</artifactId>
 			<version>2.7.0</version>
 		</dependency>
 		<dependency>
