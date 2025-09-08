@@ -52,7 +52,7 @@ jobs:
       #     JF_URL: ${{ vars.ARTIFACTORY_URL }}
       #   with:
       #     oidc-provider-name: jfrog-githuboidc
-        - name: "Get Artifactory Access Token and Setup JFrog CLI"
+      - name: "Get Artifactory Access Token and Setup JFrog CLI"
         uses: jfrog/setup-jfrog-cli@v4
         id: setup-cli
         env:
